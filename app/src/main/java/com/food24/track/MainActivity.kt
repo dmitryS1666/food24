@@ -28,9 +28,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navProgrees: LinearLayout
     private lateinit var navSet: LinearLayout
 
-    private lateinit var dashboardIcon: ImageView
-    private lateinit var eventIcon: ImageView
-    private lateinit var teamsIcon: ImageView
+    private lateinit var newPlanIcon: ImageView
+    private lateinit var shoppingListIcon: ImageView
+    private lateinit var progressIcon: ImageView
     private lateinit var setIcon: ImageView
 
     @SuppressLint("CutPasteId")
@@ -58,28 +58,28 @@ class MainActivity : AppCompatActivity() {
         navSet = findViewById(R.id.navSet)
 
         // Инициализация иконок
-        dashboardIcon = navNewPlan.findViewById(R.id.iconNewPlan)
-        eventIcon = navShopList.findViewById(R.id.iconShopList)
-        teamsIcon = navProgrees.findViewById(R.id.iconProgrees)
+        newPlanIcon = navNewPlan.findViewById(R.id.iconNewPlan)
+        shoppingListIcon = navShopList.findViewById(R.id.iconShopList)
+        progressIcon = navProgrees.findViewById(R.id.iconProgrees)
         setIcon = navSet.findViewById(R.id.iconSet)
 
         // Обработчики кликов для каждого элемента нижней панели
         navNewPlan.setOnClickListener {
             showBottomNav()
             openFragment(HomeDashboardFragment())
-            updateNavIcons("dashboard")
+            updateNavIcons("new_plan")
         }
 
 //        navShopList.setOnClickListener {
 //            showBottomNav()
 //            openFragment(AllEventsFragment())
-//            updateNavIcons("events")
+//            updateNavIcons("shopping_list")
 //        }
 //
 //        navProgrees.setOnClickListener {
 //            showBottomNav()
 //            openFragment(TeamsManagerFragment())
-//            updateNavIcons("teams")
+//            updateNavIcons("progress")
 //        }
 
         navSet.setOnClickListener {
@@ -92,19 +92,19 @@ class MainActivity : AppCompatActivity() {
             val fragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer)
 
             when (fragment) {
-                is HomeDashboardFragment -> updateNavIcons("dashboard")
+                is HomeDashboardFragment -> updateNavIcons("new_plan")
 
 //                is AllEventsFragment,
 //                is CreateEventFragment,
 //                is ViewEventFragment,
 //                is EditEventFragment,
 //                is LiveControlPanelFragment,
-//                is ResultsFragment -> updateNavIcons("events")
+//                is ResultsFragment -> updateNavIcons("shopping_list")
 //
 //                is TeamsManagerFragment,
 //                is CreateTeamFragment,
 //                is EditTeamFragment,
-//                is ViewTeamFragment -> updateNavIcons("teams")
+//                is ViewTeamFragment -> updateNavIcons("progress")
 
                 is SettingsFragment -> updateNavIcons("set")
                 else -> {
@@ -117,17 +117,17 @@ class MainActivity : AppCompatActivity() {
     fun updateNavIcons(activeFragment: String) {
         resetNavIcons()
         when (activeFragment) {
-            "dashboard" -> dashboardIcon.setImageResource(R.drawable.icon_dashboard_active)
-            "events" -> eventIcon.setImageResource(R.drawable.icon_event_active)
-            "teams" -> teamsIcon.setImageResource(R.drawable.icon_team_active)
+            "new_plan" -> newPlanIcon.setImageResource(R.drawable.icon_dashboard_active)
+            "shopping_list" -> shoppingListIcon.setImageResource(R.drawable.icon_event_active)
+            "progress" -> progressIcon.setImageResource(R.drawable.icon_team_active)
             "set" -> setIcon.setImageResource(R.drawable.settings_active) // исправлено
         }
     }
 
     private fun resetNavIcons() {
-        dashboardIcon.setImageResource(R.drawable.icon_dashboard)
-        eventIcon.setImageResource(R.drawable.icon_event)
-        teamsIcon.setImageResource(R.drawable.icon_team)
+        newPlanIcon.setImageResource(R.drawable.new_plan)
+        shoppingListIcon.setImageResource(R.drawable.shop_list)
+        progressIcon.setImageResource(R.drawable.progress)
         setIcon.setImageResource(R.drawable.settings)
     }
 
@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
 
         window.decorView.post {
             if (!isFinishing && !isDestroyed) {
-                updateNavIcons("dashboard")
+                updateNavIcons("new_plan")
             }
         }
     }
