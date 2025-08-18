@@ -21,4 +21,7 @@ interface MealEntryDao {
 
     @Query("UPDATE meal_entries SET eaten = :eaten WHERE date = :date AND mealId = :mealId")
     suspend fun setEaten(date: String, mealId: Int, eaten: Boolean)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEntries(list: List<MealEntryEntity>)
 }

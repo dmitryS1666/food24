@@ -1,59 +1,53 @@
 package com.food24.track.usecase
 
-import com.food24.track.data.dao.DailyPlanDao
-import com.food24.track.data.dao.MealDao
-import com.food24.track.data.dao.MealEntryDao
-import com.food24.track.data.entity.DailyPlanEntity
-import com.food24.track.data.entity.GoalEntity
-import com.food24.track.data.entity.MealEntryEntity
+import com.food24.track.data.dao.*
+import com.food24.track.data.entity.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.random.Random
+import kotlin.math.abs
 
-/**
- * Простейший генератор плана питания.
- * Использует список готовых блюд (MealDao) и раскладывает их по дням
- * согласно целям пользователя (GoalEntity).
- */
 class PlanGenerator(
     private val dailyPlanDao: DailyPlanDao,
     private val mealEntryDao: MealEntryDao,
     private val mealDao: MealDao
 ) {
+    // простая разбивка калорий на 5 приёмов как в макете (20/10/30/10/30)
+    private fun split(target: Int, mealsPerDay: Int): List<Int> =
+        if (mealsPerDay == 5)
+            listOf(0.20f, 0.10f, 0.30f, 0.10f, 0.30f).map { (target * it).toInt() }
+        else List(mealsPerDay) { target / mealsPerDay }
+
+    private fun pickClosest(pool: List<MealEntity>, target: Int): MealEntity =
+        pool.minByOrNull { abs(it.calories - target) } ?: pool.random()
 
     suspend fun generateForDate(date: String, goal: GoalEntity) = withContext(Dispatchers.IO) {
-        val meals = mealDao.getAll() // предположим, у тебя есть DAO-метод getAll()
-
-        if (meals.isEmpty()) return@withContext
-
-        // очистим план на эту дату (если был)
+        // очистим прежний план на эту дату
         dailyPlanDao.deletePlanByDate(date)
         mealEntryDao.deleteByDate(date)
 
-        // раскидываем блюда по количеству приёмов пищи
-        val selected = meals.shuffled().take(goal.mealsPerDay)
+        val mealTypes = listOf("Breakfast", "Snack", "Lunch", "Snack", "Dinner", "PostWorkout")
+            .take(goal.mealsPerDay)
+        val kcalPerMeal = split(goal.dailyCalories, goal.mealsPerDay)
 
-        var totalCalories = 0
-        selected.forEach { meal ->
-            totalCalories += meal.calories
-            mealEntryDao.insertEntry(
-                MealEntryEntity(
-                    date = date,
-                    mealId = meal.id,
-                    eaten = false
-                )
-            )
+        var totalC = 0; var P = 0; var F = 0; var C = 0
+        val entries = mutableListOf<MealEntryEntity>()
+
+        mealTypes.forEachIndexed { i, type ->
+            val pool = mealDao.getMealsByType(type).ifEmpty { mealDao.getAll() }
+            if (pool.isNotEmpty()) {
+                val m = pickClosest(pool, kcalPerMeal[i])
+                totalC += m.calories; P += m.protein; F += m.fat; C += m.carbs
+                entries += MealEntryEntity(date = date, mealId = m.id, eaten = false)
+            }
         }
 
-        // сохраняем план
         dailyPlanDao.insertPlan(
             DailyPlanEntity(
                 date = date,
-                totalCalories = totalCalories,
-                protein = 0, // пока нули, позже можно считать по блюдам
-                fat = 0,
-                carbs = 0
+                totalCalories = totalC,
+                protein = P, fat = F, carbs = C
             )
         )
+        mealEntryDao.insertEntries(entries)
     }
 }

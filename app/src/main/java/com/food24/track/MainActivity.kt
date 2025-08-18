@@ -117,10 +117,10 @@ class MainActivity : AppCompatActivity() {
     fun updateNavIcons(activeFragment: String) {
         resetNavIcons()
         when (activeFragment) {
-            "new_plan" -> newPlanIcon.setImageResource(R.drawable.icon_dashboard_active)
-            "shopping_list" -> shoppingListIcon.setImageResource(R.drawable.icon_event_active)
-            "progress" -> progressIcon.setImageResource(R.drawable.icon_team_active)
-            "set" -> setIcon.setImageResource(R.drawable.settings_active) // исправлено
+            "new_plan" -> newPlanIcon.setImageResource(R.drawable.new_plan_active)
+            "shopping_list" -> shoppingListIcon.setImageResource(R.drawable.shop_list_active)
+            "progress" -> progressIcon.setImageResource(R.drawable.progress_active)
+            "set" -> setIcon.setImageResource(R.drawable.settings_active)
         }
     }
 
