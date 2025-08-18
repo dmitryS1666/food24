@@ -10,7 +10,6 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.food24.track.MainActivity
 import com.food24.track.R
-import com.food24.track.ui.dashboard.DashboardFragment
 
 class WelcomeFragment : Fragment() {
 

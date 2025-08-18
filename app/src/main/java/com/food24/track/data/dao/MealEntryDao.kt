@@ -4,17 +4,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.food24.track.data.entity.MealEntryEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MealEntryDao {
-    @Query("SELECT * FROM meal_entries WHERE date = :date")
-    suspend fun getEntriesByDate(date: String): List<MealEntryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEntries(entries: List<MealEntryEntity>)
+    suspend fun insertEntry(entry: MealEntryEntity)
 
-    @Update
-    suspend fun updateEntry(entry: MealEntryEntity)
+    @Query("SELECT * FROM meal_entries WHERE date = :date")
+    fun getEntriesByDate(date: String): Flow<List<MealEntryEntity>>
+
+    @Query("DELETE FROM meal_entries WHERE date = :date")
+    suspend fun deleteByDate(date: String)
+
+    @Query("UPDATE meal_entries SET eaten = :eaten WHERE date = :date AND mealId = :mealId")
+    suspend fun setEaten(date: String, mealId: Int, eaten: Boolean)
 }

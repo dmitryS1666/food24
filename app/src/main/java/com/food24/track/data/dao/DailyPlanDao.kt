@@ -13,4 +13,7 @@ interface DailyPlanDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlan(plan: DailyPlanEntity)
+
+    @Query("DELETE FROM daily_plans WHERE date = :date")
+    suspend fun deletePlanByDate(date: String)
 }

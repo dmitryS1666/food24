@@ -14,21 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.food24.track.ui.LoadingFragment
-import com.food24.track.ui.SettingsFragment
+import com.food24.track.ui.home.HomeDashboardFragment
 import com.food24.track.ui.welcome.WelcomeFragment
-import com.food24.track.ui.dashboard.DashboardFragment
-import com.food24.track.ui.event.AllEventsFragment
-import com.food24.track.ui.event.CreateEventFragment
-import com.food24.track.ui.event.EditEventFragment
-import com.food24.track.ui.event.LiveControlPanelFragment
-import com.food24.track.ui.event.ViewEventFragment
-import com.food24.track.ui.result.ResultsFragment
-import com.food24.track.ui.team.CreateTeamFragment
-import com.food24.track.ui.team.EditTeamFragment
-import com.food24.track.ui.team.TeamsManagerFragment
-import com.food24.track.ui.team.ViewTeamFragment
+import com.food24.track.ui.settings.SettingsFragment
 import com.food24.track.ui.theme.food24EventsTheme
-import com.food24.track.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNav: View
@@ -74,21 +63,21 @@ class MainActivity : AppCompatActivity() {
         // Обработчики кликов для каждого элемента нижней панели
         navDashBoard.setOnClickListener {
             showBottomNav()
-            openFragment(DashboardFragment())
+            openFragment(HomeDashboardFragment())
             updateNavIcons("dashboard")
         }
 
-        navEvent.setOnClickListener {
-            showBottomNav()
-            openFragment(AllEventsFragment())
-            updateNavIcons("events")
-        }
-
-        navTeams.setOnClickListener {
-            showBottomNav()
-            openFragment(TeamsManagerFragment())
-            updateNavIcons("teams")
-        }
+//        navEvent.setOnClickListener {
+//            showBottomNav()
+//            openFragment(AllEventsFragment())
+//            updateNavIcons("events")
+//        }
+//
+//        navTeams.setOnClickListener {
+//            showBottomNav()
+//            openFragment(TeamsManagerFragment())
+//            updateNavIcons("teams")
+//        }
 
         navSet.setOnClickListener {
             showBottomNav()
@@ -100,19 +89,19 @@ class MainActivity : AppCompatActivity() {
             val fragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer)
 
             when (fragment) {
-                is DashboardFragment -> updateNavIcons("dashboard")
+                is HomeDashboardFragment -> updateNavIcons("dashboard")
 
-                is AllEventsFragment,
-                is CreateEventFragment,
-                is ViewEventFragment,
-                is EditEventFragment,
-                is LiveControlPanelFragment,
-                is ResultsFragment -> updateNavIcons("events")
-
-                is TeamsManagerFragment,
-                is CreateTeamFragment,
-                is EditTeamFragment,
-                is ViewTeamFragment -> updateNavIcons("teams")
+//                is AllEventsFragment,
+//                is CreateEventFragment,
+//                is ViewEventFragment,
+//                is EditEventFragment,
+//                is LiveControlPanelFragment,
+//                is ResultsFragment -> updateNavIcons("events")
+//
+//                is TeamsManagerFragment,
+//                is CreateTeamFragment,
+//                is EditTeamFragment,
+//                is ViewTeamFragment -> updateNavIcons("teams")
 
                 is SettingsFragment -> updateNavIcons("set")
                 else -> {
@@ -206,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         showBottomNav()
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentContainer, DashboardFragment())
+            .replace(R.id.mainFragmentContainer, HomeDashboardFragment())
             .commit()
 
         window.decorView.post {

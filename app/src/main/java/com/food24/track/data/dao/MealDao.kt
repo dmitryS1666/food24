@@ -11,6 +11,12 @@ interface MealDao {
     @Query("SELECT * FROM meals WHERE type = :type")
     suspend fun getMealsByType(type: String): List<MealEntity>
 
+    @Query("SELECT * FROM meals WHERE id = :id")
+    suspend fun getById(id: Int): MealEntity
+
+    @Query("SELECT * FROM meals")
+    suspend fun getAll(): List<MealEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMeals(meals: List<MealEntity>)
 }
