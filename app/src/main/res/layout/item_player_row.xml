@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/playerRow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_player_row"
+    android:padding="8dp">
+
+    <!-- Player Name -->
+    <TextView
+        android:id="@+id/textPlayer"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="36dp"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"/>
+
+    <!-- Role -->
+    <TextView
+        android:id="@+id/textRole"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:textSize="12sp"
+        android:layout_height="36dp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"/>
+
+    <!-- Lap Time -->
+    <TextView
+        android:id="@+id/textLapTime"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="36dp"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"/>
+
+    <!-- Result -->
+    <TextView
+        android:id="@+id/textResult"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="36dp"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"/>
+
+    <!-- Final Pos -->
+    <TextView
+        android:id="@+id/textPosition"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="36dp"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"/>
+
+    <!-- Buttons container -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingStart="8dp"
+        android:weightSum="2">
+
+        <ImageButton
+            android:id="@+id/buttonAddTime"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="36dp"
+            android:background="@drawable/btn_icon_background"
+            android:padding="6dp"
+            android:src="@drawable/ic_timer" />
+
+        <ImageButton
+            android:id="@+id/buttonFinishPlayer"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="36dp"
+            android:background="@drawable/btn_icon_background"
+            android:padding="6dp"
+            android:src="@drawable/ic_flag"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+</LinearLayout>

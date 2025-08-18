@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B0F2A"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header with title and back button -->
+        <LinearLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teams Manager"
+                android:textSize="24sp"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp" />
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/ic_arrow_back"
+                android:layout_marginBottom="5dp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editTeamName"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:hint="Team Name"
+            android:padding="10dp"
+            android:background="@drawable/rounded_input_bg"
+            android:textColorHint="#CCCCCC"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Add Participant"
+            android:textColor="#3B82F6"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/editPlayerName"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:hint="Name"
+            android:padding="10dp"
+            android:background="@drawable/rounded_input_bg"
+            android:textColorHint="#CCCCCC"
+            android:textColor="#FFFFFF" />
+
+        <Spinner
+            android:id="@+id/spinnerRole"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/spinner_background"
+            android:popupBackground="#1A2239" />
+
+        <Button
+            android:id="@+id/buttonAddParticipant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#3B82F6"
+            android:background="@drawable/rounded_button_bg"
+            android:textColor="#FFFFFF" />
+
+        <LinearLayout
+            android:id="@+id/participantList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/buttonCreateTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Team"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#3B82F6"
+            android:background="@drawable/rounded_button_bg"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</ScrollView>

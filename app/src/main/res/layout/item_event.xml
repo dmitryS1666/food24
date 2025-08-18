@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_event_card"
+    android:padding="16dp">
+
+    <!-- Название события -->
+    <TextView
+        android:id="@+id/itemTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Tournament"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/iconsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Дата -->
+    <TextView
+        android:id="@+id/itemDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:drawableStart="@drawable/i_calendar"
+        android:drawablePadding="10dp"
+        android:text="02/08/2025"
+        android:textColor="#B0B3C7"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/iconsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemTitle" />
+
+    <!-- Время -->
+    <TextView
+        android:id="@+id/itemTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:drawablePadding="10dp"
+        android:text="18:00"
+        android:textColor="#B0B3C7"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/i_clock"
+        app:layout_constraintEnd_toStartOf="@+id/iconsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemDate" />
+
+    <!-- Категория -->
+    <TextView
+        android:id="@+id/itemMode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:drawablePadding="10dp"
+        android:text="FPS"
+        android:textColor="#B0B3C7"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/i_mode"
+        app:layout_constraintEnd_toStartOf="@+id/iconsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemTime" />
+
+    <!-- Режим -->
+    <TextView
+        android:id="@+id/itemCategory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:drawablePadding="10dp"
+        android:text="Solo"
+        android:textColor="#B0B3C7"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/i_category"
+        app:layout_constraintEnd_toStartOf="@+id/iconsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemMode" />
+
+    <!-- Участники -->
+    <TextView
+        android:id="@+id/itemPlayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:drawablePadding="10dp"
+        android:text="16"
+        android:textColor="#B0B3C7"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/i_parti"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemCategory" />
+
+    <!-- Иконки справа -->
+    <LinearLayout
+        android:id="@+id/iconsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iconView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="View"
+            android:src="@drawable/ic_search"
+            app:tint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/iconDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="Delete"
+            android:src="@drawable/ic_delete"
+            app:tint="@android:color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/badgeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/eventStatusBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/badge_gray"
+            android:padding="4dp"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

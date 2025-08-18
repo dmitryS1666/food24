@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B0F2A"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header with back button and title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Live Control Panel"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/ic_arrow_back" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/livePanelRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Event name / date -->
+        <TextView
+            android:id="@+id/eventTitleAndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="left"
+            android:text="Event Name | 04/08/2025"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <!-- Table header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp"
+            android:background="@drawable/rounded_table_header"
+            android:paddingHorizontal="15dp"
+            android:layout_marginBottom="1dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Player"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Role"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Lap Time"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Result"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Final Pos"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_height="20dp" />
+
+            <!-- Новый заголовок для кнопок -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Act"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_height="20dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/playerRowsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="4dp" />
+
+        <!-- TODO: Add dynamic rows here -->
+
+        <!-- Button rows -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/buttonFinishEvent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="#4CAF50"
+                android:background="@drawable/rounded_button_bg"
+                android:text="Finish Event"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buttonResetAll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button_bg"
+                android:backgroundTint="#F44336"
+                android:text="Reset All"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/buttonSaveScreenshot"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_button_bg"
+                android:layout_weight="1"
+                android:backgroundTint="#607D8B"
+                android:paddingLeft="15dp"
+                android:text="Save Screenshot"
+                android:textColor="@android:color/white"
+                android:drawableStart="@drawable/ic_photo" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

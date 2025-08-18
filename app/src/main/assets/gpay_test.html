@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Google Pay Test</title>
+    <script async
+            src="https://pay.google.com/gp/p/js/pay.js"
+            onload="onGooglePayLoaded()"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        #container { display: inline-block; }
+        #output { margin-top: 20px; white-space: pre-wrap; text-align: left; }
+    </style>
+</head>
+<body>
+<h1>Google Pay Test</h1>
+<div id="container"></div>
+<div id="output"></div>
+
+<script>
+    let paymentsClient;
+
+    const baseRequest = {
+      apiVersion: 2,
+      apiVersionMinor: 0
+    };
+
+    const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+    const allowedCardNetworks = ["VISA", "MASTERCARD"];
+
+    const baseCardPaymentMethod = {
+      type: 'CARD',
+      parameters: {
+        allowedAuthMethods: allowedCardAuthMethods,
+        allowedCardNetworks: allowedCardNetworks
+      }
+    };
+
+    const tokenizationSpecification = {
+      type: 'PAYMENT_GATEWAY',
+      parameters: {
+        'gateway': 'example',
+        'gatewayMerchantId': 'exampleMerchantId'
+      }
+    };
+
+    const cardPaymentMethod = Object.assign(
+      { tokenizationSpecification: tokenizationSpecification },
+      baseCardPaymentMethod
+    );
+
+    function getPaymentDataRequest() {
+      const paymentDataRequest = Object.assign({}, baseRequest);
+      paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+      paymentDataRequest.transactionInfo = {
+        totalPriceStatus: 'FINAL',
+        totalPrice: '1.00',
+        currencyCode: 'USD'
+      };
+      paymentDataRequest.merchantInfo = {
+        merchantName: 'Example Merchant'
+      };
+      return paymentDataRequest;
+    }
+
+    function onGooglePayLoaded() {
+      paymentsClient = new google.payments.api.PaymentsClient({ environment: 'TEST' });
+      const isReadyToPayRequest = Object.assign({}, baseRequest);
+      isReadyToPayRequest.allowedPaymentMethods = [baseCardPaymentMethod];
+
+      paymentsClient.isReadyToPay(isReadyToPayRequest)
+        .then(function(response) {
+          if (response.result) {
+            const button = paymentsClient.createButton({ onClick: onGooglePayButtonClicked });
+            document.getElementById('container').appendChild(button);
+          } else {
+            document.getElementById('output').innerText = "Google Pay недоступен";
+          }
+        })
+        .catch(function(err) {
+          document.getElementById('output').innerText = "Ошибка isReadyToPay: " + JSON.stringify(err);
+        });
+    }
+
+    function onGooglePayButtonClicked() {
+      paymentsClient.loadPaymentData(getPaymentDataRequest())
+        .then(function(paymentData) {
+          document.getElementById('output').innerText =
+            "Payment Data:\n" + JSON.stringify(paymentData, null, 2);
+          if (window.android && window.android.onPaymentSuccess) {
+            window.android.onPaymentSuccess("test");
+          } else {
+            console.log("Android interface is NOT available");
+          }
+        })
+        .catch(function(err) {
+          document.getElementById('output').innerText =
+            "Ошибка loadPaymentData: " + JSON.stringify(err);
+        });
+    }
+</script>
+</body>
+</html>

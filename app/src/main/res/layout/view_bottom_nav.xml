@@ -1,0 +1,103 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomNav"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@drawable/bg_bottom_nav">
+
+    <!-- Пример элемента -->
+    <LinearLayout
+        android:id="@+id/navDashBoard"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iconDashboard"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_dashboard" />
+
+        <TextView
+            android:id="@+id/textParams"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dashboard"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navEvent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iconEvent"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_event" />
+
+        <TextView
+            android:id="@+id/textPlan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Events"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navTeams"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iconTeams"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_team" />
+
+        <TextView
+            android:id="@+id/textRun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Teams"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navSet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iconSet"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/settings" />
+
+        <TextView
+            android:id="@+id/textSet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
