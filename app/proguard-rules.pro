@@ -53,7 +53,7 @@
 #########################
 # 8. Точки входа
 #########################
--keep class com.food24.track.SplashActivity { *; }
+-keep class com.food24.track.ui.onboarding.SplashActivity { *; }
 -keep class com.food24.track.MainActivity { *; }
 
 #########################

@@ -13,17 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import com.food24.track.ui.LoadingFragment
+import androidx.fragment.app.commit
+import androidx.navigation.fragment.NavHostFragment
+import com.food24.track.ui.onboarding.LoadingFragment
 import com.food24.track.ui.home.HomeDashboardFragment
-import com.food24.track.ui.welcome.WelcomeFragment
+import com.food24.track.ui.onboarding.WelcomeFragment
 import com.food24.track.ui.settings.SettingsFragment
 import com.food24.track.ui.theme.food24EventsTheme
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNav: View
-    private lateinit var navDashBoard: LinearLayout
-    private lateinit var navEvent: LinearLayout
-    private lateinit var navTeams: LinearLayout
+    private lateinit var navNewPlan: LinearLayout
+    private lateinit var navShopList: LinearLayout
+    private lateinit var navProgrees: LinearLayout
     private lateinit var navSet: LinearLayout
 
     private lateinit var dashboardIcon: ImageView
@@ -43,37 +45,38 @@ class MainActivity : AppCompatActivity() {
         bottomNav = findViewById(R.id.bottomNavInclude)
 
         if (savedInstanceState == null) {
-            openMainFragment()
+            val showWelcome = intent.getBooleanExtra("show_welcome", false)
+            if (showWelcome) openWelcomeFragment() else openMainFragment()
         }
 
         hideSystemUI()
 
         // Инициализация элементов навигации
-        navDashBoard = findViewById(R.id.navDashBoard)
-        navEvent = findViewById(R.id.navEvent)
-        navTeams = findViewById(R.id.navTeams)
+        navNewPlan = findViewById(R.id.navNewPlan)
+        navShopList = findViewById(R.id.navShopList)
+        navProgrees = findViewById(R.id.navProgrees)
         navSet = findViewById(R.id.navSet)
 
         // Инициализация иконок
-        dashboardIcon = navDashBoard.findViewById(R.id.iconDashboard)
-        eventIcon = navEvent.findViewById(R.id.iconEvent)
-        teamsIcon = navTeams.findViewById(R.id.iconTeams)
+        dashboardIcon = navNewPlan.findViewById(R.id.iconNewPlan)
+        eventIcon = navShopList.findViewById(R.id.iconShopList)
+        teamsIcon = navProgrees.findViewById(R.id.iconProgrees)
         setIcon = navSet.findViewById(R.id.iconSet)
 
         // Обработчики кликов для каждого элемента нижней панели
-        navDashBoard.setOnClickListener {
+        navNewPlan.setOnClickListener {
             showBottomNav()
             openFragment(HomeDashboardFragment())
             updateNavIcons("dashboard")
         }
 
-//        navEvent.setOnClickListener {
+//        navShopList.setOnClickListener {
 //            showBottomNav()
 //            openFragment(AllEventsFragment())
 //            updateNavIcons("events")
 //        }
 //
-//        navTeams.setOnClickListener {
+//        navProgrees.setOnClickListener {
 //            showBottomNav()
 //            openFragment(TeamsManagerFragment())
 //            updateNavIcons("teams")
@@ -160,7 +163,7 @@ class MainActivity : AppCompatActivity() {
             fm.executePendingTransactions()
 
             val current = fm.findFragmentById(R.id.mainFragmentContainer)
-            if (current is com.food24.track.ui.welcome.WelcomeFragment) {
+            if (current is WelcomeFragment) {
                 hideBottomNav()
             } else {
                 showBottomNav()
@@ -210,6 +213,12 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentContainer, fragment)
             .commit()
+    }
+
+    fun openWelcomeFragment() {
+        supportFragmentManager.commit {
+            replace(R.id.mainFragmentContainer, WelcomeFragment())
+        }
     }
 
     override fun onStop() {

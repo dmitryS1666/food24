@@ -10,7 +10,7 @@
 
     <!-- Пример элемента -->
     <LinearLayout
-        android:id="@+id/navDashBoard"
+        android:id="@+id/navNewPlan"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -18,22 +18,22 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/iconDashboard"
+            android:id="@+id/iconNewPlan"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/icon_dashboard" />
+            android:src="@drawable/new_plan" />
 
         <TextView
             android:id="@+id/textParams"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dashboard"
+            android:text="New Plan"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/navEvent"
+        android:id="@+id/navShopList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -41,22 +41,22 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/iconEvent"
+            android:id="@+id/iconShopList"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/icon_event" />
+            android:src="@drawable/shop_list" />
 
         <TextView
             android:id="@+id/textPlan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Events"
+            android:text="Shopping List"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/navTeams"
+        android:id="@+id/navProgrees"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -64,16 +64,16 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/iconTeams"
+            android:id="@+id/iconProgrees"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/icon_team" />
+            android:src="@drawable/progress" />
 
         <TextView
             android:id="@+id/textRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Teams"
+            android:text="Progress"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
     </LinearLayout>

@@ -1,4 +1,4 @@
-package com.food24.track.ui.welcome
+package com.food24.track.ui.onboarding
 
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences

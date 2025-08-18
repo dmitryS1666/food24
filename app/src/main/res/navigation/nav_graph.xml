@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loaderFragment">
+
+    <fragment
+        android:id="@+id/loaderFragment"
+        android:name="com.food24.track.ui.onboarding.LoaderFragment"
+        android:label="Loader" >
+        <action
+            android:id="@+id/action_loader_to_splash"
+            app:destination="@id/splashFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.food24.track.ui.onboarding.SplashFragment"
+        android:label="Splash" >
+        <action
+            android:id="@+id/action_splash_to_welcome"
+            app:destination="@id/welcomeFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.food24.track.ui.onboarding.WelcomeFragment"
+        android:label="Welcome" >
+        <action
+            android:id="@+id/action_welcome_to_home"
+            app:destination="@id/homeDashboardFragment"/>
+    </fragment>
+
+    <!-- уже существующий домашний экран -->
+    <fragment
+        android:id="@+id/homeDashboardFragment"
+        android:name="com.food24.track.ui.home.HomeDashboardFragment"
+        android:label="Home"/>
+</navigation>

@@ -1,10 +1,9 @@
-package com.food24.track.ui
+package com.food24.track.ui.onboarding
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.ContextCompat
 
 class LoadingCircleView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
