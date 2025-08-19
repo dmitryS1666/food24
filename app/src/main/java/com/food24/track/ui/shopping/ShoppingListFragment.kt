@@ -1,80 +1,82 @@
 package com.food24.track.ui.shopping
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.isVisible
+import android.view.*
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.food24.track.data.entity.ShoppingItemEntity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.food24.track.App
 import com.food24.track.databinding.FragmentShoppingListBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ShoppingListFragment : Fragment() {
 
-    private var _binding: FragmentShoppingListBinding? = null
-    private val binding get() = _binding!!
+    private var _b: FragmentShoppingListBinding? = null
+    private val b get() = _b!!
 
-    private val vm: ShoppingListViewModel by viewModels()
-    private val adapter = ShoppingAdapter(
-        onToggle = { vm.toggleItem(it) }
-    )
+    private val vm: ShoppingListViewModel by viewModels {
+        val app = requireActivity().application as App
+        ShoppingListViewModelFactory(app.db.shoppingDao())
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentShoppingListBinding.inflate(inflater, container, false)
-        return binding.root
+    private val adapter = ShoppingAdapter { id, checked ->
+        vm.toggle(id, checked)
+    }
+
+    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
+        _b = FragmentShoppingListBinding.inflate(i, c, false)
+        return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.recycler.adapter = adapter
+        // список
+        b.recycler.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@ShoppingListFragment.adapter
+        }
 
+        // категории (простые)
+        val categories = listOf("Meat & Fish", "Vegetables & Fruits", "Grains & Carbs",
+            "Oils & Condiments", "Dairy & Eggs", "Others")
+        b.inputCategory.setAdapter(
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, categories)
+        )
+
+        // add product
+        b.btnAddProduct.setOnClickListener {
+            val name = b.inputName.text?.toString().orEmpty()
+            val qty  = b.inputQty.text?.toString().orEmpty()
+            val cat  = b.inputCategory.text?.toString().orEmpty()
+
+            if (name.isBlank()) {
+                Toast.makeText(requireContext(), "Enter product name", Toast.LENGTH_SHORT).show()
+            } else {
+                vm.add(name, qty, cat)   // <- теперь сигнатура совпадает
+                b.inputName.text?.clear()
+                b.inputQty.text?.clear()
+                b.inputCategory.text?.clear()
+            }
+        }
+
+
+        // clear checked
+        b.actionClearChecked.setOnClickListener { vm.clearChecked() }
+        // reset all
+        b.btnReset.setOnClickListener { vm.resetAll() }
+
+        // observe UI
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.items.collectLatest { list ->
-                binding.emptyView.isVisible = list.isEmpty()
-                adapter.submitList(list)
-            }
-        }
-        vm.loadList()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    class ShoppingAdapter(
-        private val onToggle: (ShoppingItemEntity) -> Unit
-    ) : ListAdapter<ShoppingItemEntity, ShoppingAdapter.VH>(Diff) {
-
-        object Diff : DiffUtil.ItemCallback<ShoppingItemEntity>() {
-            override fun areItemsTheSame(oldItem: ShoppingItemEntity, newItem: ShoppingItemEntity) = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: ShoppingItemEntity, newItem: ShoppingItemEntity) = oldItem == newItem
-        }
-
-        inner class VH(val item: com.food24.track.databinding.ItemShoppingBinding) :
-            RecyclerView.ViewHolder(item.root)
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-            val inf = LayoutInflater.from(parent.context)
-            val binding = com.food24.track.databinding.ItemShoppingBinding.inflate(inf, parent, false)
-            return VH(binding)
-        }
-
-        override fun onBindViewHolder(holder: VH, position: Int) {
-            val item = getItem(position)
-            with(holder.item) {
-                textName.text = item.name
-                textAmount.text = item.amount
-                checkBought.isChecked = item.checked
-                root.setOnClickListener { onToggle(item) }
-                checkBought.setOnClickListener { onToggle(item) }
+            vm.ui.collectLatest { st ->
+                adapter.submit(st.items)
+                b.actionClearChecked.isEnabled = st.hasChecked
+                b.placeholder.visibility = if (st.empty) View.VISIBLE else View.GONE
             }
         }
     }
+
+    override fun onDestroyView() { super.onDestroyView(); _b = null }
 }

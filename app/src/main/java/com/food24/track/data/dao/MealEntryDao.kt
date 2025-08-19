@@ -24,4 +24,7 @@ interface MealEntryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntries(list: List<MealEntryEntity>)
+
+    @Query("DELETE FROM meal_entries WHERE date = :date AND mealId = :mealId")
+    suspend fun deleteEntry(date: String, mealId: Int)
 }

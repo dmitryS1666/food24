@@ -213,5 +213,12 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             android:paddingTop="4dp"/>
+
+        <Button
+            android:id="@+id/btnNewPlan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Plan"
+            android:layout_marginBottom="12dp"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

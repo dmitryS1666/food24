@@ -18,7 +18,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.food24.track.ui.onboarding.LoadingFragment
 import com.food24.track.ui.home.HomeDashboardFragment
 import com.food24.track.ui.onboarding.WelcomeFragment
+import com.food24.track.ui.progress.ProgressFragment
 import com.food24.track.ui.settings.SettingsFragment
+import com.food24.track.ui.shopping.ShoppingListFragment
 import com.food24.track.ui.theme.food24EventsTheme
 
 class MainActivity : AppCompatActivity() {
@@ -70,12 +72,12 @@ class MainActivity : AppCompatActivity() {
             updateNavIcons("new_plan")
         }
 
-//        navShopList.setOnClickListener {
-//            showBottomNav()
-//            openFragment(AllEventsFragment())
-//            updateNavIcons("shopping_list")
-//        }
-//
+        navShopList.setOnClickListener {
+            showBottomNav()
+            openFragment(ShoppingListFragment())
+            updateNavIcons("shopping_list")
+        }
+
 //        navProgrees.setOnClickListener {
 //            showBottomNav()
 //            openFragment(TeamsManagerFragment())
@@ -93,19 +95,8 @@ class MainActivity : AppCompatActivity() {
 
             when (fragment) {
                 is HomeDashboardFragment -> updateNavIcons("new_plan")
-
-//                is AllEventsFragment,
-//                is CreateEventFragment,
-//                is ViewEventFragment,
-//                is EditEventFragment,
-//                is LiveControlPanelFragment,
-//                is ResultsFragment -> updateNavIcons("shopping_list")
-//
-//                is TeamsManagerFragment,
-//                is CreateTeamFragment,
-//                is EditTeamFragment,
-//                is ViewTeamFragment -> updateNavIcons("progress")
-
+                is ShoppingListFragment -> updateNavIcons("shopping_list")
+                is ProgressFragment -> updateNavIcons("progress")
                 is SettingsFragment -> updateNavIcons("set")
                 else -> {
                     // Можно сбросить иконки или скрыть навигацию, если нужен кастом
@@ -184,12 +175,6 @@ class MainActivity : AppCompatActivity() {
                 )
 
         hideBottomNav()
-    }
-
-    private fun openLoadingFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentContainer, LoadingFragment())
-            .commit()
     }
 
     fun openDashboardFragment() {

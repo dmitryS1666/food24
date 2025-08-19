@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B0F2A">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Goal -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <RadioGroup
+            android:id="@+id/groupGoal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/rbGain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Weight Gain"
+                android:textColor="#FFFFFF"/>
+
+            <RadioButton
+                android:id="@+id/rbLoss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fat Loss"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="18dp"/>
+
+            <RadioButton
+                android:id="@+id/rbMaintain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maintain"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="18dp"/>
+        </RadioGroup>
+
+        <!-- Activity level -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activity level"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerActivity"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="#283659"
+            android:popupBackground="#111C38"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Metabolism -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Metabolism"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="18dp"/>
+
+        <EditText
+            android:id="@+id/editWeight"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Your weight"
+            android:inputType="numberDecimal"
+            android:textColorHint="#9DB3E5"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#283659"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editHeight"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Your height"
+            android:inputType="number"
+            android:textColorHint="#9DB3E5"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#283659"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/editAge"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Your age"
+            android:inputType="number"
+            android:textColorHint="#9DB3E5"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#283659"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Number of meals -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of meals"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="18dp"/>
+
+        <RadioGroup
+            android:id="@+id/groupMeals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/rbMeals3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textColor="#FFFFFF"/>
+
+            <RadioButton
+                android:id="@+id/rbMeals4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="18dp"/>
+
+            <RadioButton
+                android:id="@+id/rbMeals5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="18dp"/>
+        </RadioGroup>
+
+        <!-- Generate for -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate for"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="18dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerDays"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:popupBackground="#111C38"/>
+
+        <Button
+            android:id="@+id/btnGenerate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generate Plan Now"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+</ScrollView>

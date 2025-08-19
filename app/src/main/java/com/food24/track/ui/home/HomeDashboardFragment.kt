@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.food24.track.R
 import com.food24.track.databinding.FragmentHomeDashboardBinding
 import com.food24.track.databinding.ItemHomeMealCardBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -43,6 +44,15 @@ class HomeDashboardFragment : Fragment() {
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _b = FragmentHomeDashboardBinding.inflate(i, c, false)
+
+        b.btnNewPlan.setOnClickListener {
+            // Открой экран генерации (если используешь NavComponent — navigate; если вручную:)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.mainFragmentContainer, com.food24.track.ui.meals.MealPlanGeneratorFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         return b.root
     }
 

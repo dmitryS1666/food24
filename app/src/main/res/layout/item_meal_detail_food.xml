@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#122146"
+    app:cardCornerRadius="12dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_foreground" />
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/img"
+            android:layout_marginStart="10dp"
+            android:text="Grilled Chicken with Rice"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textMacros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textTitle"
+            android:layout_toEndOf="@id/img"
+            android:layout_marginStart="10dp"
+            android:text="P: 42g   F: 15g   C: 45g"
+            android:textColor="#BFD7FF"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/textKcal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="520 kcal"
+            android:textColor="#8CCBFF"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="48dp"/>
+
+        <!-- Кнопки: заменить и удалить -->
+        <ImageButton
+            android:id="@+id/btnSwap"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:tint="#BFD7FF"
+            android:src="@android:drawable/ic_menu_rotate"/>
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_below="@id/btnSwap"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:tint="#E25D5D"
+            android:src="@android:drawable/ic_menu_delete"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -1,23 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootShopping"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#0B0F2A"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <!-- Заголовок + Clear Checked -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Shopping List"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/actionClearChecked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear Checked"
+            android:textColor="#8CCBFF"
+            android:enabled="false"/>
+    </LinearLayout>
+
+    <!-- Добавление продукта (простые поля) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+  Add Product"
+        android:textColor="#8CCBFF"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/inputName"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Product name"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9DB3E5"
+        android:background="#111C38"
+        android:inputType="textCapSentences"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/inputQty"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Quantity"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9DB3E5"
+        android:background="#111C38"
+        android:layout_marginTop="8dp"
+        android:inputType="text"/>
+
+    <!-- Категория через обычный AutoCompleteTextView -->
+    <AutoCompleteTextView
+        android:id="@+id/inputCategory"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Category"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9DB3E5"
+        android:background="#111C38"
+        android:layout_marginTop="8dp"
+        android:inputType="text"/>
+
+    <Button
+        android:id="@+id/btnAddProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Пустой плейсхолдер -->
+    <TextView
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your shopping list is empty"
+        android:textColor="#9DB3E5"
+        android:gravity="center"
+        android:padding="16dp"
+        android:visibility="gone"/>
+
+    <!-- Список -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"/>
 
-    <TextView
-        android:id="@+id/emptyView"
+    <Button
+        android:id="@+id/btnReset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Shopping list is empty"
-        android:gravity="center"
-        android:visibility="gone"
-        android:padding="16dp"/>
+        android:text="Reset List"
+        android:layout_marginTop="12dp"/>
 </LinearLayout>

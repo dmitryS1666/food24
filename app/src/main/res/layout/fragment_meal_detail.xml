@@ -1,30 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootMealDetail"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:background="#0B0F2A">
 
-    <TextView
-        android:id="@+id/textTitle"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Meal Title" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textKcal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="000 kcal"
-        android:layout_marginTop="8dp"/>
+        <!-- Заголовок: тип приёма + суммарные ккал -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/textMacros"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="P:00 F:00 C:00"
-        android:layout_marginTop="8dp"/>
-</LinearLayout>
+            <TextView
+                android:id="@+id/textMealTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lunch"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textTotalKcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 kcal"
+                android:textColor="#BFD7FF"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <!-- Список блюд этого приёма -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerFoods"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Add Item -->
+        <TextView
+            android:id="@+id/btnAddItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+  Add Item"
+            android:textColor="#8CCBFF"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- Итоги по БЖУ -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="16dp"
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="#111C38">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/textTotalsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total: 0 kcal"
+                    android:textColor="#EAF0FF"
+                    android:textStyle="bold" />
+
+                <!-- Proteins -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Proteins"
+                        android:textColor="#EAF0FF"/>
+                    <TextView
+                        android:id="@+id/textProteinCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0/0"
+                        android:textColor="#BFD7FF"/>
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progressProtein"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progressTint="#F4A62A"
+                    android:layout_marginTop="6dp"/>
+
+                <!-- Fats -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="12dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Fats"
+                        android:textColor="#EAF0FF"/>
+                    <TextView
+                        android:id="@+id/textFatCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0/0"
+                        android:textColor="#BFD7FF"/>
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progressFat"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progressTint="#E25D5D"
+                    android:layout_marginTop="6dp"/>
+
+                <!-- Carbs -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="12dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Carbohydrates"
+                        android:textColor="#EAF0FF"/>
+                    <TextView
+                        android:id="@+id/textCarbCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0/0"
+                        android:textColor="#BFD7FF"/>
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progressCarb"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progressTint="#19B39A"
+                    android:layout_marginTop="6dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Save -->
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Changes"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
