@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.food24.track.R
 import com.food24.track.databinding.FragmentHomeDashboardBinding
 import com.food24.track.databinding.ItemHomeMealCardBinding
+import com.food24.track.ui.goals.GoalsFragment
+import com.food24.track.ui.meals.MealPlanGeneratorFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -46,9 +48,15 @@ class HomeDashboardFragment : Fragment() {
         _b = FragmentHomeDashboardBinding.inflate(i, c, false)
 
         b.btnNewPlan.setOnClickListener {
-            // Открой экран генерации (если используешь NavComponent — navigate; если вручную:)
             parentFragmentManager.beginTransaction()
-                .replace(R.id.mainFragmentContainer, com.food24.track.ui.meals.MealPlanGeneratorFragment())
+                .replace(R.id.mainFragmentContainer, MealPlanGeneratorFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        b.cardGoal.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.mainFragmentContainer, GoalsFragment())
                 .addToBackStack(null)
                 .commit()
         }

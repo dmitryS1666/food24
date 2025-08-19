@@ -91,16 +91,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.addOnBackStackChangedListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer)
+            updateNavForCurrentFragment()
+        }
+    }
 
-            when (fragment) {
-                is HomeDashboardFragment -> updateNavIcons("new_plan")
-                is ShoppingListFragment -> updateNavIcons("shopping_list")
-                is ProgressFragment -> updateNavIcons("progress")
-                is SettingsFragment -> updateNavIcons("set")
-                else -> {
-                    // Можно сбросить иконки или скрыть навигацию, если нужен кастом
-                }
+    private fun updateNavForCurrentFragment() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer)
+        when (fragment) {
+            is HomeDashboardFragment -> updateNavIcons("new_plan")
+            is ShoppingListFragment  -> updateNavIcons("shopping_list")
+            is ProgressFragment      -> updateNavIcons("progress")
+            is SettingsFragment      -> updateNavIcons("set")
+            else -> {
+                // ни один из экранов нижней навигации — все иконки «неактивны»
+                resetNavIcons()
             }
         }
     }
@@ -128,6 +132,9 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.mainFragmentContainer, fragment)
             .addToBackStack(fragment::class.java.name)
             .commit()
+
+        // обновить иконки сразу после commit
+        window.decorView.post { updateNavForCurrentFragment() }
     }
 
     fun replaceFragment(fragment: Fragment, addToBackStack: Boolean = true) {
@@ -136,6 +143,9 @@ class MainActivity : AppCompatActivity() {
             if (addToBackStack) addToBackStack(fragment::class.java.name)
             commit()
         }
+
+        // обновить иконки сразу после commit
+        window.decorView.post { updateNavForCurrentFragment() }
     }
 
     fun showBottomNav() {

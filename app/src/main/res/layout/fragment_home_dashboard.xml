@@ -50,6 +50,7 @@
 
         <!-- 2) Плашка: цель -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardGoal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="#111C38"

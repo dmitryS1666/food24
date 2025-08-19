@@ -27,7 +27,7 @@
             android:id="@+id/textParams"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Plan"
+            android:text="Home"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
     </LinearLayout>
