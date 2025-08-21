@@ -1,86 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#0B0F2A"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#0B0F2A"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- Заголовок + Clear Checked -->
+    <!-- Заголовок + Clear -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="4dp">
 
-        <TextView
-            android:layout_width="0dp"
+        <!-- строка: Заголовок + Clear Checked -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Shopping List"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/actionClearChecked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clear Checked"
-            android:textColor="#8CCBFF"
-            android:enabled="false"/>
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Shopping List"
+                android:textColor="#FFFFFF"
+                android:textSize="26sp" />
+
+            <LinearLayout
+                android:id="@+id/actionClearChecked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:enabled="false">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_delete"
+                    app:tint="#3890F5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear Checked"
+                    android:textColor="#3890F5"
+                    android:paddingStart="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- строка: Назад -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/abc_action_bar_home_description"
+            android:src="@drawable/ic_arrow_back" />
     </LinearLayout>
-
-    <!-- Добавление продукта (простые поля) -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+  Add Product"
-        android:textColor="#8CCBFF"
-        android:layout_marginTop="12dp"/>
-
-    <EditText
-        android:id="@+id/inputName"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Product name"
-        android:padding="12dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#9DB3E5"
-        android:background="#111C38"
-        android:inputType="textCapSentences"
-        android:layout_marginTop="8dp"/>
-
-    <EditText
-        android:id="@+id/inputQty"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Quantity"
-        android:padding="12dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#9DB3E5"
-        android:background="#111C38"
-        android:layout_marginTop="8dp"
-        android:inputType="text"/>
-
-    <!-- Категория через обычный AutoCompleteTextView -->
-    <AutoCompleteTextView
-        android:id="@+id/inputCategory"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Category"
-        android:padding="12dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#9DB3E5"
-        android:background="#111C38"
-        android:layout_marginTop="8dp"
-        android:inputType="text"/>
-
-    <Button
-        android:id="@+id/btnAddProduct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add"
-        android:layout_marginTop="10dp"/>
 
     <!-- Пустой плейсхолдер -->
     <TextView
@@ -91,20 +72,24 @@
         android:textColor="#9DB3E5"
         android:gravity="center"
         android:padding="16dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
-    <!-- Список -->
+    <!-- Секции категорий -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+        android:id="@+id/recyclerCategories"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
 
-    <Button
-        android:id="@+id/btnReset"
-        android:layout_width="match_parent"
+    <!-- Кнопка снизу -->
+    <TextView
+        android:id="@+id/btnAddProduct"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reset List"
-        android:layout_marginTop="12dp"/>
+        android:text="+  Add Product"
+        android:textColor="#8CCBFF"
+        android:textSize="16sp" android:padding="12dp" />
 </LinearLayout>

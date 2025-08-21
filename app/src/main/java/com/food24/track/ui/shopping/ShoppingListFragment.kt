@@ -9,7 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.food24.track.App
+import com.food24.track.R
 import com.food24.track.databinding.FragmentShoppingListBinding
+import com.food24.track.databinding.SheetAddProductBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -23,9 +26,12 @@ class ShoppingListFragment : Fragment() {
         ShoppingListViewModelFactory(app.db.shoppingDao())
     }
 
-    private val adapter = ShoppingAdapter { id, checked ->
-        vm.toggle(id, checked)
-    }
+    private val adapter = ShoppingSectionAdapter(
+        onToggle = { id, checked -> vm.toggle(id, checked) },
+        onHeaderClick = { pos -> toggleHeader(pos) }
+    )
+
+    private var currentRows: List<Row> = emptyList()
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _b = FragmentShoppingListBinding.inflate(i, c, false)
@@ -33,49 +39,93 @@ class ShoppingListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // список
-        b.recycler.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@ShoppingListFragment.adapter
-        }
+        b.recyclerCategories.layoutManager = LinearLayoutManager(requireContext())
+        b.recyclerCategories.adapter = adapter
 
-        // категории (простые)
-        val categories = listOf("Meat & Fish", "Vegetables & Fruits", "Grains & Carbs",
-            "Oils & Condiments", "Dairy & Eggs", "Others")
-        b.inputCategory.setAdapter(
-            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, categories)
-        )
-
-        // add product
-        b.btnAddProduct.setOnClickListener {
-            val name = b.inputName.text?.toString().orEmpty()
-            val qty  = b.inputQty.text?.toString().orEmpty()
-            val cat  = b.inputCategory.text?.toString().orEmpty()
-
-            if (name.isBlank()) {
-                Toast.makeText(requireContext(), "Enter product name", Toast.LENGTH_SHORT).show()
-            } else {
-                vm.add(name, qty, cat)   // <- теперь сигнатура совпадает
-                b.inputName.text?.clear()
-                b.inputQty.text?.clear()
-                b.inputCategory.text?.clear()
-            }
-        }
-
+        // back
+        b.btnBack.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
 
         // clear checked
         b.actionClearChecked.setOnClickListener { vm.clearChecked() }
-        // reset all
-        b.btnReset.setOnClickListener { vm.resetAll() }
 
         // observe UI
         viewLifecycleOwner.lifecycleScope.launch {
             vm.ui.collectLatest { st ->
-                adapter.submit(st.items)
-                b.actionClearChecked.isEnabled = st.hasChecked
                 b.placeholder.visibility = if (st.empty) View.VISIBLE else View.GONE
+                b.actionClearChecked.isEnabled = st.hasChecked
+                currentRows = buildRows(st)
+                adapter.submit(currentRows)
             }
         }
+
+        // add product -> show bottom sheet
+        b.btnAddProduct.setOnClickListener { showAddProductSheet() }
+    }
+
+    /** группируем элементы во «вложенные» ряды */
+    private fun buildRows(st: ShoppingUiState): List<Row> {
+        val catOrder = listOf(
+            "Meat & Fish" to R.drawable.ic_cat_meat,
+            "Vegetables & Fruits" to R.drawable.ic_cat_veggies,
+            "Grains & Carbs" to R.drawable.ic_cat_grains,
+            "Oils & Condiments" to R.drawable.ic_cat_oils,
+            "Dairy & Eggs" to R.drawable.ic_cat_dairy,
+            "Others" to R.drawable.ic_cat_other
+        )
+
+        val grouped = st.items.groupBy { it.category.ifBlank { "Others" } }
+        val result = mutableListOf<Row>()
+
+        catOrder.forEach { (title, icon) ->
+            val expanded = true // можно хранить и восстанавливать из savedState
+            result += Row.Category(title, icon, expanded)
+            if (expanded) {
+                grouped[title].orEmpty().forEach { it ->
+                    result += Row.Item(
+                        id = it.id, name = it.name, amount = it.amount,
+                        category = it.category, checked = it.checked
+                    )
+                }
+            }
+        }
+        return result
+    }
+
+    private fun toggleHeader(position: Int) {
+        // простейший переключатель: меняем флаг и пересобираем список
+        val mutable = currentRows.toMutableList()
+        val header = mutable[position] as? Row.Category ?: return
+        header.expanded = !header.expanded
+        // пересоберём список: упростим — только меняем и перерисовываем
+        adapter.notifyItemChanged(position)
+    }
+
+    private fun showAddProductSheet() {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding = SheetAddProductBinding.inflate(layoutInflater)
+
+        val categories = listOf(
+            "Meat & Fish", "Vegetables & Fruits", "Grains & Carbs",
+            "Oils & Condiments", "Dairy & Eggs", "Others"
+        )
+        sheetBinding.inputCategory.setAdapter(
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, categories)
+        )
+
+        sheetBinding.btnAdd.setOnClickListener {
+            val name = sheetBinding.inputName.text?.toString().orEmpty()
+            val qty  = sheetBinding.inputQty.text?.toString().orEmpty()
+            val cat  = sheetBinding.inputCategory.text?.toString().orEmpty()
+            if (name.isBlank()) {
+                Toast.makeText(requireContext(), "Enter product name", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            vm.add(name, qty, cat)
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
     }
 
     override fun onDestroyView() { super.onDestroyView(); _b = null }
