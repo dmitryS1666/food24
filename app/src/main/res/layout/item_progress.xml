@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootProgressItem"
-    android:orientation="vertical"
-    android:padding="12dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="horizontal" android:padding="12dp" android:background="#111C38">
 
     <TextView
         android:id="@+id/textDate"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2025-08-18"/>
+        android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_weight="1" android:text="2025-08-19" android:textColor="#FFFFFF"/>
 
     <TextView
         android:id="@+id/textWeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="72.3 kg"/>
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="72.4 kg" android:textColor="#FFFFFF" android:layout_marginEnd="12dp"/>
 
     <TextView
         android:id="@+id/textCalories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1800 kcal"/>
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="1800 kcal" android:textColor="#8CCBFF"/>
 </LinearLayout>

@@ -78,11 +78,11 @@ class MainActivity : AppCompatActivity() {
             updateNavIcons("shopping_list")
         }
 
-//        navProgrees.setOnClickListener {
-//            showBottomNav()
-//            openFragment(TeamsManagerFragment())
-//            updateNavIcons("progress")
-//        }
+        navProgrees.setOnClickListener {
+            showBottomNav()
+            openFragment(ProgressFragment())
+            updateNavIcons("progress")
+        }
 
         navSet.setOnClickListener {
             showBottomNav()

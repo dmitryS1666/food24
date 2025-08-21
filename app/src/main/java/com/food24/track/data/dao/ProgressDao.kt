@@ -8,9 +8,12 @@ import com.food24.track.data.entity.ProgressEntryEntity
 
 @Dao
 interface ProgressDao {
-    @Query("SELECT * FROM progress_entries ORDER BY date ASC")
-    suspend fun getAllProgress(): List<ProgressEntryEntity>
+    @Query("SELECT * FROM progress_entries ORDER BY date")
+    fun observeAll(): kotlinx.coroutines.flow.Flow<List<ProgressEntryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProgress(entry: ProgressEntryEntity)
+    suspend fun insert(entity: ProgressEntryEntity)
+
+    @Query("DELETE FROM progress_entries")
+    suspend fun clearAll()
 }

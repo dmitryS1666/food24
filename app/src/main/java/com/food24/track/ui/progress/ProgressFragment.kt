@@ -1,9 +1,11 @@
 package com.food24.track.ui.progress
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,8 +31,12 @@ class ProgressFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.recycler.layoutManager =
+            androidx.recyclerview.widget.LinearLayoutManager(requireContext())   // <- layoutManager
         binding.recycler.adapter = adapter
+
         viewLifecycleOwner.lifecycleScope.launch {
             vm.progress.collectLatest { list ->
                 binding.emptyView.isVisible = list.isEmpty()
@@ -41,7 +47,7 @@ class ProgressFragment : Fragment() {
 
         binding.btnAdd.setOnClickListener {
             val weight = binding.editWeight.text.toString().toFloatOrNull() ?: return@setOnClickListener
-            val date = binding.editDate.text.toString().ifBlank { "2025-08-18" }
+            val date = binding.editDate.text.toString().ifBlank { java.time.LocalDate.now().toString() }
             vm.addEntry(ProgressEntryEntity(date = date, weight = weight, caloriesConsumed = 0))
             binding.editWeight.setText("")
         }
