@@ -36,6 +36,8 @@ class GoalsFragment : Fragment() {
         b.editWeeklyGoal.addFloatWatcher { vm.setWeeklyGoal(it) }
         b.editTimeframe.addIntWatcher { vm.setTimeframe(it) }
 
+        b.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+
         b.groupGoalType.setOnCheckedChangeListener { _, id ->
             vm.setGoalType(
                 when (id) {

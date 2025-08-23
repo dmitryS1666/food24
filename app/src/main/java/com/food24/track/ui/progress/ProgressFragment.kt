@@ -37,6 +37,8 @@ class ProgressFragment : Fragment() {
             androidx.recyclerview.widget.LinearLayoutManager(requireContext())   // <- layoutManager
         binding.recycler.adapter = adapter
 
+        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+
         viewLifecycleOwner.lifecycleScope.launch {
             vm.progress.collectLatest { list ->
                 binding.emptyView.isVisible = list.isEmpty()

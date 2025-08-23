@@ -1,44 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="16dp" android:background="#0B0F2A">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#0B0F2A">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <!-- Шапка: назад + заголовок + заглушка под правый отступ -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="6dp"
+            android:text="Progress"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp" />
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/abc_action_bar_home_description"
+            android:src="@drawable/ic_arrow_back" />
+    </LinearLayout>
 
     <!-- форма добавления веса -->
     <LinearLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/editDate"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:hint="YYYY-MM-DD"
-            android:padding="10dp" android:textColor="#FFFFFF"
-            android:textColorHint="#9DB3E5" android:background="#111C38"/>
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:hint="YYYY-MM-DD"
+            android:padding="10dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#9DB3E5"
+            android:background="#111C38"/>
 
         <EditText
             android:id="@+id/editWeight"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:hint="Weight, kg"
-            android:padding="10dp" android:inputType="numberDecimal"
-            android:textColor="#FFFFFF" android:textColorHint="#9DB3E5"
-            android:background="#111C38" android:layout_marginStart="8dp"/>
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:hint="Weight, kg"
+            android:padding="10dp"
+            android:inputType="numberDecimal"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#9DB3E5"
+            android:background="#111C38"
+            android:layout_marginStart="8dp"/>
 
         <Button
             android:id="@+id/btnAdd"
-            android:layout_width="wrap_content" android:layout_height="48dp"
-            android:text="Add" android:layout_marginStart="8dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="Add"
+            android:layout_marginStart="8dp"/>
     </LinearLayout>
 
     <!-- плейсхолдер пустого списка -->
     <TextView
         android:id="@+id/emptyView"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="No progress yet" android:textColor="#9DB3E5"
-        android:gravity="center" android:padding="12dp" android:visibility="gone"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No progress yet"
+        android:textColor="#9DB3E5"
+        android:gravity="center"
+        android:padding="12dp"
+        android:visibility="gone"/>
 
     <!-- список записей прогресса -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
-        android:layout_width="match_parent" android:layout_height="0dp"
-        android:layout_weight="1" android:layout_marginTop="8dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"/>
 </LinearLayout>
