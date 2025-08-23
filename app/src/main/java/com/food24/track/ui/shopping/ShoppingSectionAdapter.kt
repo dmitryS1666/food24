@@ -31,6 +31,8 @@ class ShoppingSectionAdapter(
         notifyDataSetChanged()
     }
 
+    fun getRowAt(position: Int): Row? = rows.getOrNull(position)
+
     override fun getItemViewType(position: Int) =
         when (rows[position]) {
             is Row.Category -> 0
@@ -66,14 +68,14 @@ class ShoppingSectionAdapter(
 
     class ItemVH(private val b: ItemShoppingBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(row: Row.Item, onToggle: (Int, Boolean) -> Unit) {
-            val cb: CheckBox = b.checkBox
-            cb.text = buildString {
+            b.tvNameAmount.text = buildString {
                 append(row.name)
-                if (row.amount.isNotBlank()) append(" — ${row.amount}")
+                if (row.amount.isNotBlank()) append(": ").append(row.amount)
             }
-            cb.setOnCheckedChangeListener(null)
-            cb.isChecked = row.checked
-            cb.setOnCheckedChangeListener { _, checked -> onToggle(row.id, checked) }
+
+            b.checkBox.setOnCheckedChangeListener(null)
+            b.checkBox.isChecked = row.checked
+            b.checkBox.setOnCheckedChangeListener { _, checked -> onToggle(row.id, checked) }
         }
     }
 }

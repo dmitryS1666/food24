@@ -16,7 +16,7 @@ import com.food24.track.data.entity.*
         ProgressEntryEntity::class,
         GoalEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -1,36 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:orientation="vertical" android:padding="16dp" android:background="#0B0F2A">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#0B0F2A">
 
     <TextView
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Add Product" android:textColor="#FFFFFF" android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Product"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/inputName"
-        android:layout_width="match_parent" android:layout_height="48dp"
-        android:layout_marginTop="12dp" android:background="#111C38"
-        android:hint="Product name" android:padding="12dp"
-        android:textColor="#FFFFFF" android:textColorHint="#9DB3E5" />
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_input"
+        android:hint="Product name"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9DB3E5" />
 
     <EditText
         android:id="@+id/inputQty"
-        android:layout_width="match_parent" android:layout_height="48dp"
-        android:layout_marginTop="8dp" android:background="#111C38"
-        android:hint="Quantity" android:padding="12dp"
-        android:textColor="#FFFFFF" android:textColorHint="#9DB3E5" />
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_input"
+        android:hint="Enter the number of calories"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9DB3E5" />
 
-    <AutoCompleteTextView
-        android:id="@+id/inputCategory"
-        android:layout_width="match_parent" android:layout_height="48dp"
-        android:layout_marginTop="8dp" android:background="#111C38"
-        android:hint="Category" android:padding="12dp"
-        android:textColor="#FFFFFF" android:textColorHint="#9DB3E5" />
+    <Spinner
+        android:id="@+id/inputCategorySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_input"
+        android:popupBackground="#0B0F2A"
+        android:spinnerMode="dropdown" />
 
     <Button
         android:id="@+id/btnAdd"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" android:text="Add" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/bg_button"
+        android:text="Add" />
 </LinearLayout>

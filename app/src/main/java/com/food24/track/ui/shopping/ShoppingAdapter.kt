@@ -2,19 +2,33 @@ package com.food24.track.ui.shopping
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.food24.track.data.entity.ShoppingItemEntity
 import com.food24.track.databinding.ItemShoppingBinding
 
 class ShoppingAdapter(
-    private val onChecked: (id: Int, checked: Boolean) -> Unit
-) : RecyclerView.Adapter<ShoppingAdapter.VH>() {
+    private val onToggle: (Int, Boolean) -> Unit
+) : ListAdapter<ShoppingItemEntity, ShoppingAdapter.VH>(Diff) {
 
-    private val items = mutableListOf<UiShoppingItem>()
+    object Diff : DiffUtil.ItemCallback<ShoppingItemEntity>() {
+        override fun areItemsTheSame(o: ShoppingItemEntity, n: ShoppingItemEntity) = o.id == n.id
+        override fun areContentsTheSame(o: ShoppingItemEntity, n: ShoppingItemEntity) = o == n
+    }
 
-    fun submit(newItems: List<UiShoppingItem>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
+    inner class VH(private val b: ItemShoppingBinding) : RecyclerView.ViewHolder(b.root) {
+        fun bind(row: ShoppingItemEntity) {
+            b.tvNameAmount.text = buildString {
+                append(row.name)
+                if (row.amount.isNotBlank()) append(": ").append(row.amount)
+            }
+            b.checkBox.setOnCheckedChangeListener(null)
+            b.checkBox.isChecked = row.checked
+            b.checkBox.setOnCheckedChangeListener { _, checked ->
+                onToggle(row.id, checked)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -23,20 +37,6 @@ class ShoppingAdapter(
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val it = items[position]
-        with(holder.b.checkBox) {
-            text = buildString {
-                append(it.name)
-                if (it.amount.isNotBlank()) append(" — ${it.amount}")
-                if (it.category.isNotBlank()) append("  (${it.category})")
-            }
-            setOnCheckedChangeListener(null)
-            isChecked = it.checked
-            setOnCheckedChangeListener { _, checked -> onChecked(it.id, checked) }
-        }
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = items.size
-
-    class VH(val b: ItemShoppingBinding) : RecyclerView.ViewHolder(b.root)
 }

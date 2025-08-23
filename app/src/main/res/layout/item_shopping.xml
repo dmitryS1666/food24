@@ -1,13 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="56dp"
     android:orientation="horizontal"
-    android:padding="12dp"
-    android:background="#111C38">
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/bg_category_item">
+
+    <TextView
+        android:id="@+id/tvNameAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text=""
+        android:textColor="#EAF0FF"
+        android:textSize="16sp" />
 
     <CheckBox
         android:id="@+id/checkBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#EAF0FF" />
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:button="@drawable/checkbox_custom" />
 </LinearLayout>
