@@ -126,8 +126,12 @@
         <!-- Buttons -->
         <Button
             android:id="@+id/btnSaveGoal"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Save Goal" android:layout_marginTop="16dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Goal"
+            android:layout_marginTop="16dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button"/>
         <TextView
             android:id="@+id/actionReset"
             android:layout_width="wrap_content" android:layout_height="wrap_content"

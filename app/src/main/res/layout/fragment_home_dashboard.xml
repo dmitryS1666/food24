@@ -220,6 +220,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="New Plan"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
