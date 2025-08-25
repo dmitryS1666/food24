@@ -34,17 +34,16 @@
                     android:layout_weight="1"
                     android:text="20.06.2025"
                     android:textColor="#EAF0FF"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textSize="18sp"/>
 
                 <ImageButton
                     android:id="@+id/btnPickDate"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_my_calendar"
-                    android:tint="#8CCBFF"
-                    android:contentDescription="@null"/>
+                    android:src="@drawable/i_calendar"
+                    android:contentDescription="@null"
+                    app:tint="#8CCBFF" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -64,22 +63,54 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/textGoal"
+                <!-- Goal -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Goal: Lose Fat"
-                    android:textColor="#8CCBFF"
-                    android:textSize="14sp"/>
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textTargetRange"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Goal:"
+                        android:textColor="#3890F5"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/textGoal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Maintain"
+                        android:textColor="#EAF0FF"
+                        android:textSize="18sp"
+                        android:layout_marginStart="6dp"/>
+                </LinearLayout>
+
+                <!-- Target -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Target: 2,300–2,500 kcal"
-                    android:textColor="#EAF0FF"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"/>
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Target:"
+                        android:textColor="#3890F5"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/textTargetRange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2,300–2,500 kcal"
+                        android:textColor="#EAF0FF"
+                        android:textSize="18sp"
+                        android:layout_marginStart="6dp"/>
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -93,117 +124,140 @@
             android:layout_marginBottom="12dp">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/textCalories"
-                    android:layout_width="wrap_content"
+                <!-- Header: Calories consumed: 1850 / 2400 kcal -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Calories consumed: 0 / 0 kcal"
-                    android:textColor="#EAF0FF"
-                    android:textSize="14sp"/>
+                    android:orientation="horizontal">
 
-                <!-- Proteins -->
+                    <TextView
+                        android:id="@+id/textCaloriesLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Calories consumed:"
+                        android:textColor="#3890F5"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+
+                    <TextView
+                        android:id="@+id/textCalories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="0 / 0 kcal"
+                        android:textColor="#EAF0FF"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+
+                <!-- Proteins row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Proteins"
-                        android:textColor="#EAF0FF"/>
+                        android:textColor="#EAF0FF"
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:id="@+id/textProteinCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0/0"
-                        android:textColor="#BFD7FF"/>
+                        android:textColor="#BFD7FF"
+                        android:textSize="15sp"/>
                 </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/progressProtein"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:max="100"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="8dp"
                     android:progress="0"
-                    android:progressTint="#F4A62A"
-                    android:layout_marginTop="6dp"/>
+                    android:max="100"
+                    android:progressDrawable="@drawable/pb_protein_rounded"/>
 
-                <!-- Fats -->
+                <!-- Fats row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="12dp">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Fats"
-                        android:textColor="#EAF0FF"/>
+                        android:textColor="#EAF0FF"
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:id="@+id/textFatCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0/0"
-                        android:textColor="#BFD7FF"/>
+                        android:textColor="#BFD7FF"
+                        android:textSize="15sp"/>
                 </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/progressFat"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:max="100"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="8dp"
                     android:progress="0"
-                    android:progressTint="#E25D5D"
-                    android:layout_marginTop="6dp"/>
+                    android:max="100"
+                    android:progressDrawable="@drawable/pb_fat_rounded"/>
 
-                <!-- Carbs -->
+                <!-- Carbs row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="12dp">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Carbohydrates"
-                        android:textColor="#EAF0FF"/>
+                        android:textColor="#EAF0FF"
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:id="@+id/textCarbCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0/0"
-                        android:textColor="#BFD7FF"/>
+                        android:textColor="#BFD7FF"
+                        android:textSize="15sp"/>
                 </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/progressCarb"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:max="100"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="8dp"
                     android:progress="0"
-                    android:progressTint="#19B39A"
-                    android:layout_marginTop="6dp"/>
+                    android:max="100"
+                    android:progressDrawable="@drawable/pb_carb_rounded"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

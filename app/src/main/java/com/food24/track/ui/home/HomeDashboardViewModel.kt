@@ -1,15 +1,18 @@
 package com.food24.track.ui.home
 
+import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import com.food24.track.data.dao.DailyPlanDao
 import com.food24.track.data.dao.GoalDao
 import com.food24.track.data.dao.MealDao
 import com.food24.track.data.dao.MealEntryDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.first
 
 class HomeDashboardViewModel(
     private val goalDao: GoalDao,
@@ -21,39 +24,64 @@ class HomeDashboardViewModel(
     private val _ui = MutableStateFlow(HomeUiState())
     val ui: StateFlow<HomeUiState> = _ui
 
-    fun load(date: String) {
+    // храним выбранную дату (ISO yyyy-MM-dd)
+    private val dateFlow = MutableStateFlow("")
+
+    @OptIn(UnstableApi::class)
+    fun bind(dateIso: String) {
+        // если дата не менялась — выходим
+        if (dateFlow.value == dateIso) return
+        dateFlow.value = dateIso
+
         viewModelScope.launch {
-            val goal = goalDao.getGoal()
-            val plan = dailyPlanDao.getPlanByDate(date)
+            // на каждую дату пересобираем подписку
+            dateFlow.collect { date ->
+                // отменяем предыдущий сбор (launchIn/collectLatest)
+                combine(
+                    goalDao.observeGoal(),
+                    dailyPlanDao.observePlanByDate(date),
+                    mealEntryDao.observeEntriesByDate(date)
+                ) { goal, plan, entries ->
+                    // подтянем все блюда разом
+                    val mealIds = entries.map { it.mealId }.distinct()
+                    val meals = if (mealIds.isEmpty()) emptyList() else mealDao.getByIds(mealIds)
+                    val mealById = meals.associateBy { it.id }
 
-            // 1) берём один срез из Flow<List<MealEntryEntity>>
-            val entries = mealEntryDao.getEntriesByDate(date).first()
+                    var cals = 0; var p = 0; var f = 0; var cb = 0
+                    val cards = mutableListOf<MealCardUi>()
 
-            // 2) считаем прогресс и собираем карточки через обычный цикл,
-            //    т.к. внутри нужна suspend-функция mealDao.getById(...)
-            var cals = 0; var p = 0; var f = 0; var cb = 0
-            val cards = mutableListOf<MealCardUi>()
+                    Log.d("HOME", "date=${date}, entries=${entries.size}, plan=${plan?.date}, goal=${goal?.goalType}")
+                    entries.take(3).forEach { e ->
+                        android.util.Log.d("HOME", "mealId=${e.mealId} date=${e.date} eaten=${e.eaten}")
+                    }
 
-            for (e in entries) {
-                val m = mealDao.getById(e.mealId) ?: continue
-                if (e.eaten) {
-                    cals += m.calories; p += m.protein; f += m.fat; cb += m.carbs
-                }
-                cards += MealCardUi(m.id, m.name, m.calories, e.eaten, m.type)
+                    entries.forEach { e ->
+                        val m = mealById[e.mealId] ?: return@forEach
+                        if (e.eaten) {
+                            cals += m.calories; p += m.protein; f += m.fat; cb += m.carbs
+                        }
+                        cards += MealCardUi(m.id, m.name, m.calories, e.eaten, m.type)
+                    }
+
+                    val targetKcal = goal?.dailyCalories ?: (plan?.totalCalories ?: 0)
+                    HomeUiState(
+                        date = date,
+                        goalTitle = when (goal?.goalType) {
+                            "Lose" -> "Lose Fat"
+                            "Gain" -> "Weight Gain"
+                            else   -> "Maintain"
+                        },
+                        targetRange = goal?.let {
+                            "${(it.dailyCalories - 200).coerceAtLeast(0)}–${it.dailyCalories + 200} kcal"
+                        } ?: "",
+                        consumed = cals, target = targetKcal,
+                        protein = p to (plan?.protein ?: 0),
+                        fat     = f to (plan?.fat ?: 0),
+                        carbs   = cb to (plan?.carbs ?: 0),
+                        mealCards = cards
+                    )
+                }.collect { state -> _ui.value = state }
             }
-
-            val targetKcal = goal?.dailyCalories ?: (plan?.totalCalories ?: 0)
-
-            _ui.value = HomeUiState(
-                date = date,
-                goalTitle = when (goal?.goalType) { "Lose" -> "Lose Fat"; "Gain" -> "Weight Gain"; else -> "Maintain" },
-                targetRange = if (goal != null) "${(goal.dailyCalories - 200).coerceAtLeast(0)}–${goal.dailyCalories + 200} kcal" else "",
-                consumed = cals, target = targetKcal,
-                protein = p to (plan?.protein ?: 0),
-                fat = f to (plan?.fat ?: 0),
-                carbs = cb to (plan?.carbs ?: 0),
-                mealCards = cards
-            )
         }
     }
 }

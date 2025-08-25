@@ -27,4 +27,16 @@ interface MealEntryDao {
 
     @Query("DELETE FROM meal_entries WHERE date = :date AND mealId = :mealId")
     suspend fun deleteEntry(date: String, mealId: Int)
+
+    @Query("SELECT * FROM meal_entries WHERE date = :date")
+    fun observeByDate(date: String): Flow<List<MealEntryEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entry: MealEntryEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(list: List<MealEntryEntity>)
+
+    @Query("SELECT * FROM meal_entries WHERE date = :date")
+    fun observeEntriesByDate(date: String): kotlinx.coroutines.flow.Flow<List<MealEntryEntity>>
 }

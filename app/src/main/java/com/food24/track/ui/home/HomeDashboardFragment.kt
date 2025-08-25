@@ -21,6 +21,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import kotlin.math.roundToInt
+import android.view.View
+import com.food24.track.data.entity.MealTypes
 
 class HomeDashboardFragment : Fragment() {
 
@@ -47,6 +49,12 @@ class HomeDashboardFragment : Fragment() {
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _b = FragmentHomeDashboardBinding.inflate(i, c, false)
 
+        b.recyclerMealsGrid.layoutManager = GridLayoutManager(requireContext(), 2)
+        b.recyclerMealsGrid.adapter = adapter
+        if (b.recyclerMealsGrid.itemDecorationCount == 0) {
+            b.recyclerMealsGrid.addItemDecoration(gridSpacing(3))
+        }
+
         b.btnNewPlan.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.mainFragmentContainer, MealPlanGeneratorFragment())
@@ -66,30 +74,35 @@ class HomeDashboardFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        b.recyclerMealsGrid.layoutManager = GridLayoutManager(requireContext(), 2)
-        b.recyclerMealsGrid.adapter = adapter
-
-        // дата + загрузка
         renderDate()
-        vm.load(currentDate.format(dbFormatter))
+        vm.bind(currentDate.format(dbFormatter))
 
         b.btnPickDate.setOnClickListener { showDatePicker() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             vm.ui.collectLatest { st ->
-                b.textGoal.text = "Goal: ${st.goalTitle}"
+                b.textGoal.text = st.goalTitle
                 b.textTargetRange.text = st.targetRange
 
-                b.textCalories.text = "Calories consumed: ${st.consumed} / ${st.target} kcal"
+                b.textCalories.text = "${st.consumed} / ${st.target} kcal"
                 b.progressProtein.progress = pct(st.protein.first, st.protein.second)
-                b.progressFat.progress = pct(st.fat.first, st.fat.second)
-                b.progressCarb.progress = pct(st.carbs.first, st.carbs.second)
+                b.progressFat.progress     = pct(st.fat.first,     st.fat.second)
+                b.progressCarb.progress    = pct(st.carbs.first,   st.carbs.second)
 
                 b.textProteinCount.text = "${st.protein.first}/${st.protein.second}"
-                b.textFatCount.text = "${st.fat.first}/${st.fat.second}"
-                b.textCarbCount.text = "${st.carbs.first}/${st.carbs.second}"
+                b.textFatCount.text     = "${st.fat.first}/${st.fat.second}"
+                b.textCarbCount.text    = "${st.carbs.first}/${st.carbs.second}"
 
                 adapter.submit(st.mealCards)
+            }
+        }
+    }
+
+    private fun gridSpacing(spaceDp: Int): RecyclerView.ItemDecoration {
+        val px = (resources.displayMetrics.density * spaceDp).toInt()
+        return object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.set(px, px, px, px)
             }
         }
     }
@@ -114,7 +127,7 @@ class HomeDashboardFragment : Fragment() {
             { _, y, m, d ->
                 currentDate = LocalDate.of(y, m + 1, d)
                 renderDate()
-                vm.load(currentDate.format(dbFormatter))
+                vm.bind(currentDate.format(dbFormatter))   // было vm.load(...)
             },
             cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
         ).show()
@@ -145,11 +158,26 @@ private class MealCardAdapter(
         val it = items[position]
         with(h.b) {
             textType.text = it.type
-            textTitle.text = it.title
-            textKcal.text = "${it.calories} kcal"
+            textKcal.text = "${it.calories}kcal"
+
+            val imgRes = when (it.type) {
+                MealTypes.BREAKFAST    -> R.drawable.meal_breakfast
+                MealTypes.SNACK        -> R.drawable.meal_snack
+                MealTypes.LUNCH        -> R.drawable.meal_lunch
+                MealTypes.DINNER       -> R.drawable.meal_dinner
+                MealTypes.POST_WORKOUT -> R.drawable.meal_postworkout
+                else                   -> R.drawable.placeholder_meal
+            }
+            img.setImageResource(imgRes)
+
+            overlayDim.visibility = if (it.eaten) View.GONE else View.VISIBLE
+
             root.setOnClickListener { onClick(it.id) }
+            btnView.setOnClickListener { onClick(it.id) }
+            btnEdit.setOnClickListener { onClick(it.id) }
         }
     }
+
 
     override fun getItemCount() = items.size
 }

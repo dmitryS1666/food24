@@ -19,4 +19,9 @@ interface MealDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMeals(meals: List<MealEntity>)
+
+    @Query("SELECT COUNT(*) FROM meals") suspend fun countAll(): Int
+    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertAll(list: List<MealEntity>)
+    @Query("SELECT * FROM meals WHERE type = :type") suspend fun getByType(type: String): List<MealEntity>
+    @Query("SELECT * FROM meals WHERE id IN (:ids)") suspend fun getByIds(ids: List<Int>): List<MealEntity>
 }

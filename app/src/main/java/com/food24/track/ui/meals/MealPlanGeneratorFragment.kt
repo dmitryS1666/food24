@@ -35,7 +35,6 @@ class MealPlanGeneratorFragment : Fragment() {
         return b.root
     }
 
-    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Спиннеры

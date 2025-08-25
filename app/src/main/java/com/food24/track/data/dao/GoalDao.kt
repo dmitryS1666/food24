@@ -13,4 +13,7 @@ interface GoalDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveGoal(goal: GoalEntity)
+
+    @Query("SELECT * FROM goals LIMIT 1")
+    fun observeGoal(): kotlinx.coroutines.flow.Flow<GoalEntity?>
 }
