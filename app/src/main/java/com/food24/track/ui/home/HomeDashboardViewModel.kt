@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.Locale
 
 class HomeDashboardViewModel(
     private val goalDao: GoalDao,
@@ -24,46 +26,46 @@ class HomeDashboardViewModel(
     private val _ui = MutableStateFlow(HomeUiState())
     val ui: StateFlow<HomeUiState> = _ui
 
+    private fun kcal(n: Int): String =
+        NumberFormat.getIntegerInstance(Locale.US).format(n)
+
     // храним выбранную дату (ISO yyyy-MM-dd)
     private val dateFlow = MutableStateFlow("")
 
     @OptIn(UnstableApi::class)
     fun bind(dateIso: String) {
-        // если дата не менялась — выходим
         if (dateFlow.value == dateIso) return
         dateFlow.value = dateIso
 
         viewModelScope.launch {
-            // на каждую дату пересобираем подписку
             dateFlow.collect { date ->
-                // отменяем предыдущий сбор (launchIn/collectLatest)
                 combine(
                     goalDao.observeGoal(),
                     dailyPlanDao.observePlanByDate(date),
                     mealEntryDao.observeEntriesByDate(date)
                 ) { goal, plan, entries ->
-                    // подтянем все блюда разом
                     val mealIds = entries.map { it.mealId }.distinct()
                     val meals = if (mealIds.isEmpty()) emptyList() else mealDao.getByIds(mealIds)
                     val mealById = meals.associateBy { it.id }
 
                     var cals = 0; var p = 0; var f = 0; var cb = 0
                     val cards = mutableListOf<MealCardUi>()
-
-                    Log.d("HOME", "date=${date}, entries=${entries.size}, plan=${plan?.date}, goal=${goal?.goalType}")
-                    entries.take(3).forEach { e ->
-                        android.util.Log.d("HOME", "mealId=${e.mealId} date=${e.date} eaten=${e.eaten}")
-                    }
-
                     entries.forEach { e ->
                         val m = mealById[e.mealId] ?: return@forEach
-                        if (e.eaten) {
-                            cals += m.calories; p += m.protein; f += m.fat; cb += m.carbs
-                        }
+                        if (e.eaten) { cals += m.calories; p += m.protein; f += m.fat; cb += m.carbs }
                         cards += MealCardUi(m.id, m.name, m.calories, e.eaten, m.type)
                     }
 
+                    // ❶ Дневная цель из Goals (если есть), иначе из плана на день
                     val targetKcal = goal?.dailyCalories ?: (plan?.totalCalories ?: 0)
+
+                    // ❷ Диапазон из цели: ±200 ккал
+                    val range = if (goal != null) {
+                        val low  = (goal.dailyCalories - 200).coerceAtLeast(0)
+                        val high = goal.dailyCalories + 200
+                        "${kcal(low)}–${kcal(high)} kcal"
+                    } else ""
+
                     HomeUiState(
                         date = date,
                         goalTitle = when (goal?.goalType) {
@@ -71,16 +73,15 @@ class HomeDashboardViewModel(
                             "Gain" -> "Weight Gain"
                             else   -> "Maintain"
                         },
-                        targetRange = goal?.let {
-                            "${(it.dailyCalories - 200).coerceAtLeast(0)}–${it.dailyCalories + 200} kcal"
-                        } ?: "",
-                        consumed = cals, target = targetKcal,
+                        targetRange = range,                 // ← сюда кладём рассчитанный диапазон
+                        consumed = cals,
+                        target = targetKcal,                 // для полоски «consumed / target»
                         protein = p to (plan?.protein ?: 0),
                         fat     = f to (plan?.fat ?: 0),
                         carbs   = cb to (plan?.carbs ?: 0),
                         mealCards = cards
                     )
-                }.collect { state -> _ui.value = state }
+                }.collect { st -> _ui.value = st }
             }
         }
     }

@@ -3,8 +3,10 @@ package com.food24.track.ui.goals
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
-import android.widget.RadioButton
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,59 +26,98 @@ class GoalsFragment : Fragment() {
         GoalsViewModelFactory(app.db.goalDao())
     }
 
-    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
-        _b = FragmentGoalsBinding.inflate(i, c, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _b = FragmentGoalsBinding.inflate(inflater, container, false)
         return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // watchers
+        // подписи для кастомных радио-айтемов
+        b.itemGain.radioLabel.text = "Weight Gain"
+        b.itemLoss.radioLabel.text = "Fat Loss"
+        b.itemMaintain.radioLabel.text = "Maintain"
+
+        b.itemMeals3.radioLabel.text = "3"
+        b.itemMeals4.radioLabel.text = "4"
+        b.itemMeals5.radioLabel.text = "5"
+
+        // текст-вотчеры
         b.editWeight.addFloatWatcher { vm.setWeight(it) }
         b.editTargetWeight.addFloatWatcher { vm.setTargetWeight(it) }
         b.editWeeklyGoal.addFloatWatcher { vm.setWeeklyGoal(it) }
         b.editTimeframe.addIntWatcher { vm.setTimeframe(it) }
 
+        // Назад
         b.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
 
-        b.groupGoalType.setOnCheckedChangeListener { _, id ->
-            vm.setGoalType(
-                when (id) {
-                    b.rbGain.id -> GoalType.GAIN
-                    b.rbMaintain.id -> GoalType.MAINTAIN
-                    else -> GoalType.LOSS
-                }
-            )
+        // --- Эксклюзивный выбор цели ---
+        fun selectGoal(type: GoalType) {
+            b.itemGain.radio.isChecked = false
+            b.itemLoss.radio.isChecked = false
+            b.itemMaintain.radio.isChecked = false
+            when (type) {
+                GoalType.GAIN -> b.itemGain.radio.isChecked = true
+                GoalType.LOSS -> b.itemLoss.radio.isChecked = true
+                GoalType.MAINTAIN -> b.itemMaintain.radio.isChecked = true
+            }
+            vm.setGoalType(type)
         }
-        b.groupMealsPerDay.setOnCheckedChangeListener { _, id ->
-            vm.setMealsPerDay(
-                when (id) {
-                    b.rbMeals3.id -> 3
-                    b.rbMeals4.id -> 4
-                    else -> 5
-                }
-            )
-        }
+        b.itemGain.root.setOnClickListener { selectGoal(GoalType.GAIN) }
+        b.itemLoss.root.setOnClickListener { selectGoal(GoalType.LOSS) }
+        b.itemMaintain.root.setOnClickListener { selectGoal(GoalType.MAINTAIN) }
+        b.itemGain.radio.setOnClickListener { selectGoal(GoalType.GAIN) }
+        b.itemLoss.radio.setOnClickListener { selectGoal(GoalType.LOSS) }
+        b.itemMaintain.radio.setOnClickListener { selectGoal(GoalType.MAINTAIN) }
 
+        // --- Эксклюзивный выбор кол-ва приёмов пищи ---
+        fun selectMeals(n: Int) {
+            b.itemMeals3.radio.isChecked = false
+            b.itemMeals4.radio.isChecked = false
+            b.itemMeals5.radio.isChecked = false
+            when (n) {
+                3 -> b.itemMeals3.radio.isChecked = true
+                4 -> b.itemMeals4.radio.isChecked = true
+                5 -> b.itemMeals5.radio.isChecked = true
+            }
+            vm.setMealsPerDay(n)
+        }
+        b.itemMeals3.root.setOnClickListener { selectMeals(3) }
+        b.itemMeals4.root.setOnClickListener { selectMeals(4) }
+        b.itemMeals5.root.setOnClickListener { selectMeals(5) }
+        b.itemMeals3.radio.setOnClickListener { selectMeals(3) }
+        b.itemMeals4.radio.setOnClickListener { selectMeals(4) }
+        b.itemMeals5.radio.setOnClickListener { selectMeals(5) }
+
+        // Сохранить цель
         b.btnSaveGoal.setOnClickListener {
             vm.save(
-                onDone = { Toast.makeText(requireContext(), "Goal saved", Toast.LENGTH_SHORT).show() },
+                onDone = {
+                    Toast.makeText(requireContext(), "Goal saved", Toast.LENGTH_SHORT).show()
+                    (activity as? com.food24.track.MainActivity)?.openDashboardFragment()
+                },
                 onError = { Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_LONG).show() }
             )
         }
         b.actionReset.setOnClickListener { vm.resetToDefault() }
 
-        // observe
+        // Подписка на стейт
         viewLifecycleOwner.lifecycleScope.launch {
             vm.ui.collectLatest { st ->
-                // заполнение полей (без зацикливания watchers)
-                setTextIfChanged(b.editWeight, st.weight?.toString().orEmpty())
-                setTextIfChanged(b.editTargetWeight, st.targetWeight?.toString().orEmpty())
-                setTextIfChanged(b.editWeeklyGoal, st.weeklyGoalKg?.toString().orEmpty())
-                setTextIfChanged(b.editTimeframe, st.timeframeWeeks?.toString().orEmpty())
+                // поля
+                setTextIfChanged(b.editWeight,        st.weight?.toString().orEmpty())
+                setTextIfChanged(b.editTargetWeight,  st.targetWeight?.toString().orEmpty())
+                setTextIfChanged(b.editWeeklyGoal,    st.weeklyGoalKg?.toString().orEmpty())
+                setTextIfChanged(b.editTimeframe,     st.timeframeWeeks?.toString().orEmpty())
 
-                checkGoalRadio(st.goalType)
-                checkMealsRadio(st.mealsPerDay)
+                // радио
+                when (st.goalType) {
+                    GoalType.GAIN      -> selectGoal(GoalType.GAIN)
+                    GoalType.LOSS      -> selectGoal(GoalType.LOSS)
+                    GoalType.MAINTAIN  -> selectGoal(GoalType.MAINTAIN)
+                }
+                selectMeals(st.mealsPerDay ?: 3)
 
+                // расчёты
                 b.textMaintenance.text = "Maintenance: ${st.maintenance} kcal"
                 b.textDailyTarget.text = "Your Daily Target: ${st.dailyTarget} kcal"
             }
@@ -85,36 +126,24 @@ class GoalsFragment : Fragment() {
         vm.load()
     }
 
-    private fun checkGoalRadio(type: GoalType) {
-        val rb: RadioButton = when (type) {
-            GoalType.GAIN -> b.rbGain
-            GoalType.MAINTAIN -> b.rbMaintain
-            GoalType.LOSS -> b.rbLoss
-        }
-        if (b.groupGoalType.checkedRadioButtonId != rb.id) rb.isChecked = true
+    private fun setTextIfChanged(v: EditText, value: String) {
+        if (v.text?.toString() != value) v.setText(value)
     }
 
-    private fun checkMealsRadio(n: Int) {
-        val id = when (n) { 3 -> b.rbMeals3.id; 4 -> b.rbMeals4.id; else -> b.rbMeals5.id }
-        if (b.groupMealsPerDay.checkedRadioButtonId != id) b.groupMealsPerDay.check(id)
+    override fun onDestroyView() {
+        super.onDestroyView(); _b = null
     }
-
-    private fun setTextIfChanged(v: android.widget.EditText, value: String) {
-        if (v.text?.toString() != value) { v.setText(value) }
-    }
-
-    override fun onDestroyView() { super.onDestroyView(); _b = null }
 }
 
-/* helpers */
-private fun android.widget.EditText.addFloatWatcher(onValue: (Float?) -> Unit) {
+/* --- helpers --- */
+private fun EditText.addFloatWatcher(onValue: (Float?) -> Unit) {
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) { onValue(s?.toString()?.toFloatOrNull()) }
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
 }
-private fun android.widget.EditText.addIntWatcher(onValue: (Int?) -> Unit) {
+private fun EditText.addIntWatcher(onValue: (Int?) -> Unit) {
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) { onValue(s?.toString()?.toIntOrNull()) }
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

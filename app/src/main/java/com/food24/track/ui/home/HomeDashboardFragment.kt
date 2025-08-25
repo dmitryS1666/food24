@@ -23,6 +23,8 @@ import java.util.Calendar
 import kotlin.math.roundToInt
 import android.view.View
 import com.food24.track.data.entity.MealTypes
+import java.text.NumberFormat
+import java.util.Locale
 
 class HomeDashboardFragment : Fragment() {
 

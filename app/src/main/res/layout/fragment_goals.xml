@@ -34,93 +34,143 @@
             android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"/>
+
         <EditText
             android:id="@+id/editWeight"
-            android:layout_width="match_parent" android:layout_height="48dp"
-            android:background="#111C38" android:padding="12dp"
-            android:textColor="#FFFFFF" android:textColorHint="#9DB3E5"
-            android:hint="Enter your current weight" android:inputType="numberDecimal"/>
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input"
+            android:hint="Enter your current weight"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textColorHint="#909090"/>
 
         <!-- Target weight -->
-        <TextView android:text="Target Weight" android:textColor="#FFFFFF"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+        <TextView android:text="Target Weight"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"/>
+
         <EditText
             android:id="@+id/editTargetWeight"
-            android:layout_width="match_parent" android:layout_height="48dp"
-            android:background="#111C38" android:padding="12dp"
-            android:textColor="#FFFFFF" android:textColorHint="#9DB3E5"
-            android:hint="Enter your target Weight" android:inputType="numberDecimal"/>
+            android:hint="Enter your target Weight"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textColorHint="#909090"/>
 
         <!-- Weekly goal (kg/week, +/-) -->
-        <TextView android:text="Weekly Goal" android:textColor="#FFFFFF"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+        <TextView android:text="Weekly Goal"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"/>
+
         <EditText
             android:id="@+id/editWeeklyGoal"
-            android:layout_width="match_parent" android:layout_height="48dp"
-            android:background="#111C38" android:padding="12dp"
-            android:textColor="#FFFFFF" android:textColorHint="#9DB3E5"
-            android:hint="e.g. -0.5 or 0.3" android:inputType="numberDecimal"/>
+            android:hint="e.g. -0.5 or 0.3"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textColorHint="#909090"/>
 
         <!-- Timeframe (weeks) -->
-        <TextView android:text="Timeframe" android:textColor="#FFFFFF"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <TextView android:text="Timeframe"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"/>
+
         <EditText
             android:id="@+id/editTimeframe"
-            android:layout_width="match_parent" android:layout_height="48dp"
-            android:background="#111C38" android:padding="12dp"
-            android:textColor="#FFFFFF" android:textColorHint="#9DB3E5"
-            android:hint="Desired timeframe (weeks)" android:inputType="number"/>
+            android:hint="Desired timeframe (weeks)"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textColorHint="#909090"/>
 
         <!-- Goal type -->
-        <TextView android:text="Goal" android:textColor="#FFFFFF"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <TextView android:text="Goal"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"/>
+
         <RadioGroup
             android:id="@+id/groupGoalType"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:layout_marginTop="6dp">
-            <RadioButton android:id="@+id/rbGain" android:text="Weight Gain"
-                android:textColor="#FFFFFF" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <RadioButton android:id="@+id/rbLoss" android:text="Fat Loss"
-                android:textColor="#FFFFFF" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"/>
-            <RadioButton android:id="@+id/rbMaintain" android:text="Maintain"
-                android:textColor="#FFFFFF" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="12dp">
+
+            <include layout="@layout/item_radio_option"
+                android:id="@+id/itemGain"/>
+            <include layout="@layout/item_radio_option"
+                android:id="@+id/itemLoss"/>
+            <include layout="@layout/item_radio_option"
+                android:id="@+id/itemMaintain"/>
         </RadioGroup>
 
         <!-- Meals per day -->
-        <TextView android:text="Number of meals" android:textColor="#FFFFFF"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <TextView android:text="Number of meals"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"/>
+
         <RadioGroup
             android:id="@+id/groupMealsPerDay"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:layout_marginTop="6dp">
-            <RadioButton android:id="@+id/rbMeals3" android:text="3"
-                android:textColor="#FFFFFF" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <RadioButton android:id="@+id/rbMeals4" android:text="4"
-                android:textColor="#FFFFFF" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"/>
-            <RadioButton android:id="@+id/rbMeals5" android:text="5"
-                android:textColor="#FFFFFF" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="12dp">
+
+            <include layout="@layout/item_radio_option"
+                android:id="@+id/itemMeals3"/>
+            <include layout="@layout/item_radio_option"
+                android:id="@+id/itemMeals4"/>
+            <include layout="@layout/item_radio_option"
+                android:id="@+id/itemMeals5"/>
         </RadioGroup>
 
         <!-- Calculated lines -->
         <TextView
             android:id="@+id/textMaintenance"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Maintenance: 0 kcal" android:textColor="#8CCBFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maintenance: 0 kcal"
+            android:textColor="#3890F5"
             android:layout_marginTop="12dp"/>
+
         <TextView
             android:id="@+id/textDailyTarget"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Your Daily Target: 0 kcal" android:textColor="#8CCBFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Daily Target: 0 kcal"
+            android:textColor="#3890F5"
             android:layout_marginTop="6dp"/>
 
         <!-- Buttons -->
@@ -132,10 +182,14 @@
             android:layout_marginTop="16dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/bg_button"/>
+
         <TextView
             android:id="@+id/actionReset"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Reset to Default" android:textColor="#9DB3E5"
-            android:layout_marginTop="12dp" android:layout_gravity="center_horizontal"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset to Default"
+            android:textColor="#9DB3E5"
+            android:layout_marginTop="12dp"
+                android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 </ScrollView>
