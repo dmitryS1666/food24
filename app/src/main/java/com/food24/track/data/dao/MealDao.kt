@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.food24.track.data.entity.MealEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MealDao {
@@ -20,8 +21,18 @@ interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMeals(meals: List<MealEntity>)
 
-    @Query("SELECT COUNT(*) FROM meals") suspend fun countAll(): Int
-    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertAll(list: List<MealEntity>)
-    @Query("SELECT * FROM meals WHERE type = :type") suspend fun getByType(type: String): List<MealEntity>
-    @Query("SELECT * FROM meals WHERE id IN (:ids)") suspend fun getByIds(ids: List<Int>): List<MealEntity>
+    @Query("SELECT COUNT(*) FROM meals")
+    suspend fun countAll(): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(list: List<MealEntity>)
+
+    @Query("SELECT * FROM meals WHERE type = :type")
+    suspend fun getByType(type: String): List<MealEntity>
+
+    @Query("SELECT * FROM meals WHERE id IN (:ids)")
+    suspend fun getByIds(ids: List<Int>): List<MealEntity>
+
+    @Query("SELECT * FROM meals")
+    fun observeAll(): Flow<List<MealEntity>>
 }

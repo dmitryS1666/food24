@@ -23,6 +23,7 @@ import java.util.Calendar
 import kotlin.math.roundToInt
 import android.view.View
 import com.food24.track.data.entity.MealTypes
+import com.food24.track.ui.day.DayDetailsFragment
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -32,7 +33,6 @@ class HomeDashboardFragment : Fragment() {
     private val b get() = _b!!
 
     private val vm: HomeDashboardViewModel by viewModels {
-        // твоя фабрика (как обсуждали ранее)
         val app = requireActivity().application as com.food24.track.App
         HomeDashboardViewModelFactory(
             app.db.goalDao(), app.db.dailyPlanDao(), app.db.mealEntryDao(), app.db.mealDao()
@@ -48,6 +48,7 @@ class HomeDashboardFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private val dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _b = FragmentHomeDashboardBinding.inflate(i, c, false)
 
@@ -55,6 +56,14 @@ class HomeDashboardFragment : Fragment() {
         b.recyclerMealsGrid.adapter = adapter
         if (b.recyclerMealsGrid.itemDecorationCount == 0) {
             b.recyclerMealsGrid.addItemDecoration(gridSpacing(3))
+        }
+
+        b.cardDate.setOnClickListener {
+            val dateIso = currentDate.format(dbFormatter)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.mainFragmentContainer, DayDetailsFragment.newInstance(dateIso))
+                .addToBackStack(null)
+                .commit()
         }
 
         b.btnNewPlan.setOnClickListener {
