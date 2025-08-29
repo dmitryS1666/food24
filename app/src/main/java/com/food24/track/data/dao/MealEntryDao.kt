@@ -39,4 +39,7 @@ interface MealEntryDao {
 
     @Query("SELECT * FROM meal_entries WHERE date = :date")
     fun observeEntriesByDate(date: String): kotlinx.coroutines.flow.Flow<List<MealEntryEntity>>
+
+    @Query("UPDATE meal_entries SET eaten = :eaten WHERE date = :date AND mealId = :mealId")
+    suspend fun updateEaten(date: String, mealId: Int, eaten: Boolean)
 }

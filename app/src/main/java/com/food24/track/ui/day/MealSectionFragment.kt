@@ -35,12 +35,15 @@ class MealSectionFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // ВАЖНО: без LayoutManager список не отрисуется
+        b.list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         b.list.adapter = adapter
+
         val date = requireArguments().getString(ARG_DATE)!!
         val type = requireArguments().getString(ARG_TYPE)!!
 
-        b.textHeader.text = "${typeToTitle(type)} • " +
-                LocalDate.parse(date).format(DateTimeFormatter.ofPattern("EEE, MMM d")) // <-- работает
+        val fmt = java.time.format.DateTimeFormatter.ofPattern("EEE, MMM d") // <-- java.time.*
+        b.textHeader.text = "${typeToTitle(type)} • " + java.time.LocalDate.parse(date).format(fmt)
 
         vm.bind(date, type)
 

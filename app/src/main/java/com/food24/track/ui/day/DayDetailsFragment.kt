@@ -49,9 +49,9 @@ class DayDetailsFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        b.recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         b.recycler.adapter = adapter
 
-        // дата из аргументов, если передана
         arguments?.getString("date")?.let { date = LocalDate.parse(it) }
         vm.bind(date.toString())
 
@@ -70,13 +70,10 @@ class DayDetailsFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.sections.collectLatest { sections ->
-                adapter.submit(sections)
-            }
+            vm.sections.collectLatest { sections -> adapter.submit(sections) }
         }
 
         b.btnRegenerate.setOnClickListener {
-            // TODO: дернуть твой генератор для конкретной даты
             Toast.makeText(requireContext(), "Regenerate: todo", Toast.LENGTH_SHORT).show()
         }
     }

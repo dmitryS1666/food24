@@ -6,40 +6,59 @@ import com.food24.track.data.dao.MealDao
 import com.food24.track.data.dao.MealEntryDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-// ui/day/MealSectionViewModel.kt
+data class MealRowUi(
+    val mealId: Int,
+    val title: String,
+    val calories: Int,
+    val eaten: Boolean
+)
+
 class MealSectionViewModel(
-    private val entryDao: MealEntryDao,
+    private val mealEntryDao: MealEntryDao,
     private val mealDao: MealDao
 ) : ViewModel() {
 
-    private val _items = MutableStateFlow<List<MealItemUi>>(emptyList())
-    val items: StateFlow<List<MealItemUi>> = _items
+    private val _items = MutableStateFlow<List<MealRowUi>>(emptyList())
+    val items: StateFlow<List<MealRowUi>> = _items
 
-    private var date = ""
-    private var type = ""
+    private var currentDate = ""
+    private var currentType = ""
 
     fun bind(dateIso: String, type: String) {
-        date = dateIso; this.type = type
+        currentDate = dateIso
+        currentType = type
+
         viewModelScope.launch {
-            entryDao.observeEntriesByDate(dateIso).collect { entries ->
+            mealEntryDao.observeEntriesByDate(dateIso).collectLatest { entries ->
+                // нужны только записи этого типа -> узнаём тип через MealEntity
                 val ids = entries.map { it.mealId }.distinct()
                 val meals = if (ids.isEmpty()) emptyList() else mealDao.getByIds(ids)
                 val byId = meals.associateBy { it.id }
 
-                _items.value = entries.mapNotNull { e ->
+                val filtered = entries.mapNotNull { e ->
                     val m = byId[e.mealId] ?: return@mapNotNull null
                     if (m.type != type) return@mapNotNull null
-                    MealItemUi(e.mealId, m.name, m.calories, e.eaten)
+                    MealRowUi(
+                        mealId = m.id,
+                        title = m.name,
+                        calories = m.calories,
+                        eaten = e.eaten
+                    )
                 }
+                _items.value = filtered
             }
         }
     }
 
     fun toggle(mealId: Int, eaten: Boolean) {
-        viewModelScope.launch { entryDao.setEaten(date, mealId, eaten) }
+        val date = currentDate
+        if (date.isBlank()) return
+        viewModelScope.launch {
+            // см. п.3 — нужен DAO метод updateEaten(...)
+            mealEntryDao.updateEaten(date, mealId, eaten)
+        }
     }
 }
-
-data class MealItemUi(val id: Int, val title: String, val kcal: Int, val eaten: Boolean)
