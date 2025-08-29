@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,7 +27,10 @@ class MealSectionFragment : Fragment() {
         MealSectionVMFactory(app.db.mealEntryDao(), app.db.mealDao())
     }
 
-    private val adapter = MealSectionAdapter { id, eaten -> vm.toggle(id, eaten) }
+    private val adapter = MealSectionAdapter { id, eaten, after ->
+        vm.toggle(id, eaten)
+        after()
+    }
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _b = FragmentMealSectionBinding.inflate(i, c, false)
@@ -39,10 +43,23 @@ class MealSectionFragment : Fragment() {
         b.list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         b.list.adapter = adapter
 
-        val date = requireArguments().getString(ARG_DATE)!!
+        val dateIso = requireArguments().getString(ARG_DATE)!!
         val type = requireArguments().getString(ARG_TYPE)!!
 
-        val fmt = java.time.format.DateTimeFormatter.ofPattern("EEE, MMM d") // <-- java.time.*
+        val isToday = (LocalDate.parse(dateIso) == LocalDate.now())
+
+        b.list.adapter = MealSectionAdapter { mealId, newValue, revert ->
+            if (!isToday) {
+                Toast.makeText(requireContext(), "Можно отмечать только за сегодня", Toast.LENGTH_SHORT).show()
+                revert()
+                return@MealSectionAdapter
+            }
+            vm.toggle(mealId, newValue)
+        }
+
+        val date = requireArguments().getString(ARG_DATE)!!
+
+        val fmt = DateTimeFormatter.ofPattern("EEE, MMM d") // <-- java.time.*
         b.textHeader.text = "${typeToTitle(type)} • " + java.time.LocalDate.parse(date).format(fmt)
 
         vm.bind(date, type)

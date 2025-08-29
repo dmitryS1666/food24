@@ -39,7 +39,20 @@ class HomeDashboardFragment : Fragment() {
         )
     }
 
-    private val adapter = MealCardAdapter { /* TODO: open details */ }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val adapter = MealCardAdapter { type ->
+        // открываем детали секции за выбранную дату
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.mainFragmentContainer,
+                com.food24.track.ui.day.MealSectionFragment.newInstance(
+                    currentDate.format(dbFormatter),
+                    type.toString()
+                )
+            )
+            .addToBackStack(null)
+            .commit()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var currentDate: LocalDate = LocalDate.now()
@@ -180,12 +193,12 @@ private class MealCardAdapter(
                 else                   -> R.drawable.placeholder_meal
             }
             img.setImageResource(imgRes)
-
             overlayDim.visibility = if (it.eaten) View.GONE else View.VISIBLE
 
+            // теперь по клику — переходим в секцию типа it.type
             root.setOnClickListener { onClick(it.id) }
             btnView.setOnClickListener { onClick(it.id) }
-            btnEdit.setOnClickListener { onClick(it.id) }
+//            btnEdit.setOnClickListener { onClick(it.type) }
         }
     }
 

@@ -74,7 +74,18 @@ class DayDetailsFragment : Fragment() {
         }
 
         b.btnRegenerate.setOnClickListener {
-            Toast.makeText(requireContext(), "Regenerate: todo", Toast.LENGTH_SHORT).show()
+            val dateIso = date.toString()
+            vm.regenerateDay(
+                dateIso = dateIso,
+                mealsPerDay = 4,   // при желании подставь реальное значение из Goal/настроек
+                onDone = {
+                    Toast.makeText(requireContext(), "Day regenerated", Toast.LENGTH_SHORT).show()
+                    vm.bind(dateIso) // если подписка по flow — можно не звать
+                },
+                onError = { t ->
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
+                }
+            )
         }
     }
 

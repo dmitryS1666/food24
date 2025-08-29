@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.food24.track.R
 
 class MealSectionAdapter(
-    private val onToggle: (mealId: Int, eaten: Boolean) -> Unit
+    private val onToggle: (mealId: Int, newValue: Boolean, revert: () -> Unit) -> Unit
 ) : RecyclerView.Adapter<MealSectionAdapter.VH>() {
 
     private val items = mutableListOf<MealRowUi>()
@@ -22,19 +22,27 @@ class MealSectionAdapter(
 
     override fun onBindViewHolder(h: VH, pos: Int) {
         val it = items[pos]
-        h.title.text = it.title
-        h.kcal.text = "${it.calories} kcal"
-        h.check.setOnCheckedChangeListener(null)
-        h.check.isChecked = it.eaten
-        h.check.setOnCheckedChangeListener { _, checked -> onToggle(it.mealId, checked) }
+        h.textTitle.text = it.title
+        h.textKcal.text = "${it.calories} kcal"
+        h.checkEaten.setOnCheckedChangeListener(null)
+        h.checkEaten.isChecked = it.eaten
+        h.checkEaten.setOnCheckedChangeListener { _, checked ->
+            // передаем наружу + даем колбэк на откат UI
+            onToggle(it.mealId, checked) {
+                // вернуть чекбокс назад
+                h.checkEaten.setOnCheckedChangeListener(null)
+                h.checkEaten.isChecked = !checked
+                h.checkEaten.setOnCheckedChangeListener { _, c -> onToggle(it.mealId, c) { /* no-op */ } }
+            }
+        }
     }
 
     override fun getItemCount() = items.size
 
     class VH(v: View) : RecyclerView.ViewHolder(v) {
-        val title: TextView = v.findViewById(R.id.textTitle)
-        val kcal: TextView = v.findViewById(R.id.textKcal)
-        val check: CheckBox = v.findViewById(R.id.checkEaten)
+        val textTitle: TextView = v.findViewById(R.id.textTitle)
+        val textKcal: TextView = v.findViewById(R.id.textKcal)
+        val checkEaten: CheckBox = v.findViewById(R.id.checkEaten)
     }
 }
 
