@@ -7,57 +7,55 @@ import android.view.View
 import kotlin.math.max
 
 class LineChartView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null
-) : View(context, attrs) {
+    c: Context, a: AttributeSet? = null
+) : View(c, a) {
 
+    data class Point(val x: Float, val y: Float)
+    private val data = mutableListOf<Point>()
+
+    private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#22335F"); strokeWidth = 2f
+    }
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#3890F5"); strokeWidth = 6f; style = Paint.Style.STROKE
     }
-    private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#334567"); strokeWidth = 1f
-    }
     private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#8CCBFF"); style = Paint.Style.FILL
+        color = Color.parseColor("#3890F5")
     }
 
-    private var values: List<Float> = emptyList()
-
-    fun setData(points: List<Float>) {
-        values = points
-        invalidate()
+    fun setPoints(points: List<Point>) {
+        data.clear(); data.addAll(points); invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (values.isEmpty()) return
+        if (data.isEmpty()) return
 
-        val w = width.toFloat()
-        val h = height.toFloat()
-        val left = paddingLeft + 12f
-        val right = w - paddingRight - 12f
-        val top = paddingTop + 12f
-        val bottom = h - paddingBottom - 12f
+        val left = paddingLeft + 24f
+        val right = width - paddingRight - 24f
+        val top = paddingTop + 24f
+        val bottom = height - paddingBottom - 24f
 
-        // grid
-        val rows = 4
-        val rowStep = (bottom - top) / rows
-        for (i in 0..rows) {
-            val y = bottom - i * rowStep
-            canvas.drawLine(left, y, right, y, gridPaint)
-        }
+        // grid (simple border)
+        canvas.drawRoundRect(left, top, right, bottom, 24f, 24f, gridPaint)
 
-        val minV = values.minOrNull() ?: 0f
-        val maxV = values.maxOrNull() ?: 1f
-        val span = max(1e-3f, (maxV - minV)).toFloat()
+        val minX = data.minOf { it.x }
+        val maxX = data.maxOf { it.x }
+        val minY = data.minOf { it.y }
+        val maxY = data.maxOf { it.y }
 
-        val dx = if (values.size <= 1) 0f else (right - left) / (values.size - 1)
+        fun mapX(x: Float) =
+            left + (x - minX) / max(1f, (maxX - minX)) * (right - left)
+        fun mapY(y: Float) =
+            bottom - (y - minY) / max(1f, (maxY - minY)) * (bottom - top)
+
         val path = Path()
-        values.forEachIndexed { i, v ->
-            val x = left + dx * i
-            val y = bottom - (v - minV) / span * (bottom - top)
-            if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
-            canvas.drawCircle(x, y, 5f, dotPaint)
+        data.forEachIndexed { i, p ->
+            val X = mapX(p.x); val Y = mapY(p.y)
+            if (i == 0) path.moveTo(X, Y) else path.lineTo(X, Y)
         }
         canvas.drawPath(path, linePaint)
+
+        data.forEach { p -> canvas.drawCircle(mapX(p.x), mapY(p.y), 8f, dotPaint) }
     }
 }

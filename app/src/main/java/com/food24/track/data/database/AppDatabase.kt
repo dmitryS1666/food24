@@ -14,9 +14,10 @@ import com.food24.track.data.entity.*
         MealEntryEntity::class,
         ShoppingItemEntity::class,
         ProgressEntryEntity::class,
-        GoalEntity::class
+        GoalEntity::class,
+        WeightLogEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -27,6 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun shoppingDao(): ShoppingDao
     abstract fun progressDao(): ProgressDao
     abstract fun goalDao(): GoalDao
+    abstract fun weightLogDao(): WeightLogDao
 
     companion object {
         @Volatile

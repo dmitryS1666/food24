@@ -7,22 +7,26 @@ import android.view.View
 import kotlin.math.max
 
 class BarChartView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null
-) : View(context, attrs) {
+    c: Context, a: AttributeSet? = null
+) : View(c, a) {
+
+    private val values = mutableListOf<Float>()
+    private var above = 0f
+    private var below = 0f
 
     private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#3890F5")
+        color = Color.parseColor("#4C8CF6")
     }
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#334567"); strokeWidth = 1f
+        color = Color.parseColor("#22335F"); strokeWidth = 2f
     }
+    private val guideAbove = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#8E3B3B") }
+    private val guideWithin = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#2A6E57") }
+    private val guideBelow = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#A36A2A") }
 
-    private var values: List<Float> = emptyList()
-    private var goal: Float = 0f
-
-    fun setData(bars: List<Float>, goalLine: Float) {
-        values = bars
-        goal = goalLine
+    fun setBars(bars: List<Float>, targetLow: Float, targetHigh: Float) {
+        values.clear(); values.addAll(bars)
+        below = targetLow; above = targetHigh
         invalidate()
     }
 
@@ -30,31 +34,26 @@ class BarChartView @JvmOverloads constructor(
         super.onDraw(canvas)
         if (values.isEmpty()) return
 
-        val w = width.toFloat()
-        val h = height.toFloat()
-        val left = paddingLeft + 16f
-        val right = w - paddingRight - 16f
-        val top = paddingTop + 16f
-        val bottom = h - paddingBottom - 24f
+        val left = paddingLeft + 24f
+        val right = width - paddingRight - 24f
+        val top = paddingTop + 24f
+        val bottom = height - paddingBottom - 24f
 
-        // grid lines (below/within/above target)
-        val third = (bottom - top) / 3f
-        canvas.drawLine(left, top + third, right, top + third, gridPaint)
-        canvas.drawLine(left, top + 2 * third, right, top + 2 * third, gridPaint)
+        // guides (3 zones: below/within/above target)
+        canvas.drawLine(left, bottom - (above - minVal()) / span() * (bottom - top), right, bottom - (above - minVal()) / span() * (bottom - top), guideAbove)
+        canvas.drawLine(left, bottom - (below - minVal()) / span() * (bottom - top), right, bottom - (below - minVal()) / span() * (bottom - top), guideBelow)
 
-        val maxV = max(values.maxOrNull() ?: goal, goal)
-        val span = if (maxV <= 0f) 1f else maxV
+        val barW = (right - left) / (values.size * 1.5f)
+        var x = left + barW * 0.25f
 
-        val count = values.size
-        val gap = 12f
-        val barWidth = ((right - left) - gap * (count + 1)) / count
-
-        values.forEachIndexed { i, v ->
-            val x1 = left + gap + i * (barWidth + gap)
-            val x2 = x1 + barWidth
-            val height = (v / span) * (bottom - top)
-            val y1 = bottom - height
-            canvas.drawRect(x1, y1, x2, bottom, barPaint)
+        values.forEach { v ->
+            val h = (v - minVal()) / span() * (bottom - top)
+            canvas.drawRoundRect(x, bottom - h, x + barW, bottom, 12f, 12f, barPaint)
+            x += barW * 1.5f
         }
     }
+
+    private fun minVal(): Float = minOf(values.minOrNull() ?: 0f, below)
+    private fun maxVal(): Float = max(values.maxOrNull() ?: 0f, above)
+    private fun span(): Float = max(1f, maxVal() - minVal())
 }

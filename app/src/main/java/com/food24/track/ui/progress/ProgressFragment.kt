@@ -1,82 +1,101 @@
 package com.food24.track.ui.progress
 
+import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.food24.track.data.entity.ProgressEntryEntity
 import com.food24.track.databinding.FragmentProgressBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class ProgressFragment : Fragment() {
 
-    private var _binding: FragmentProgressBinding? = null
-    private val binding get() = _binding!!
+    private var _b: FragmentProgressBinding? = null
+    private val b get() = _b!!
 
-    private val vm: ProgressViewModel by viewModels()
-    private val adapter = ProgressAdapter()
+    private val vm: ProgressViewModel by viewModels {
+        val app = requireActivity().application as com.food24.track.App
+        ProgressVMFactory(app.db.weightLogDao(), app.db.goalDao(), app.db.dailyPlanDao(), app.db.mealEntryDao())
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentProgressBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
+        _b = FragmentProgressBinding.inflate(i, c, false); return b.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.recycler.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(requireContext())   // <- layoutManager
-        binding.recycler.adapter = adapter
 
-        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+        b.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+
+        // добавить вес
+        b.actionAddWeight.setOnClickListener {
+            val now = LocalDate.now()
+            DatePickerDialog(
+                requireContext(),
+                { _, y, m, d ->
+                    val date = LocalDate.of(y, m + 1, d)
+                    // простой инпут веса
+                    val dlg = android.app.AlertDialog.Builder(requireContext())
+                    val input = android.widget.EditText(requireContext()).apply {
+                        inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+                        hint = "Weight, kg"
+                        setPadding(32, 24, 32, 24)
+                        setText("")
+                    }
+                    dlg.setTitle("Add Weight")
+                        .setView(input)
+                        .setPositiveButton("Save") { _, _ ->
+                            val v = input.text.toString().toFloatOrNull()
+                            if (v != null && v in 20f..500f) vm.addWeight(date, v)
+                            else Toast.makeText(requireContext(), "Enter valid weight", Toast.LENGTH_SHORT).show()
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                },
+                now.year, now.monthValue - 1, now.dayOfMonth
+            ).show()
+        }
+
+        b.btnReset.setOnClickListener { vm.reset() }
+
+        // tabs
+        var showMonth = false
+        fun renderBars(ui: ProgressUi) {
+            val days = if (showMonth) 30 else 7
+            val bars = ui.bars.takeLast(days)
+            b.calorieChart.setBars(bars, ui.targetLow, ui.targetHigh)
+        }
+        b.tabWeek.setOnClickListener { showMonth = false; vm.ui.value.let { renderBars(it) } }
+        b.tabMonth.setOnClickListener { showMonth = true; vm.ui.value.let { renderBars(it) } }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.progress.collectLatest { list ->
-                binding.emptyView.isVisible = list.isEmpty()
-                adapter.submitList(list)
+            vm.ui.collectLatest { ui ->
+                // карточка веса
+                b.textCurrentWeight.text = "Current weight: ${ui.current?.let { "%.1f".format(it) } ?: "—"} kg"
+                b.textTargetWeight.text = "Target weight: ${ui.target?.let { "%.1f".format(it) } ?: "—"} kg"
+                b.textProgress.text = ui.progressText
+
+                // график веса
+                val pts = ui.weights.mapIndexed { idx, pair ->
+                    com.food24.track.ui.progress.LineChartView.Point(idx.toFloat(), pair.second)
+                }
+                b.weightChart.setPoints(pts)
+
+                // калории
+                b.textCalGoal.text = "Goal: ${ui.goalKcal} kcal/day"
+                b.textCalAvg.text = "Average intake (7 days): ${ui.avg7days} kcal"
+                b.textCalHits.text = "Hit target: ${ui.hits7days} out of 7 days"
+
+                renderBars(ui)
             }
         }
-        vm.loadProgress()
-
-        binding.btnAdd.setOnClickListener {
-            val weight = binding.editWeight.text.toString().toFloatOrNull() ?: return@setOnClickListener
-            val date = binding.editDate.text.toString().ifBlank { java.time.LocalDate.now().toString() }
-            vm.addEntry(ProgressEntryEntity(date = date, weight = weight, caloriesConsumed = 0))
-            binding.editWeight.setText("")
-        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    class ProgressAdapter : ListAdapter<ProgressEntryEntity, ProgressAdapter.VH>(Diff) {
-        object Diff : DiffUtil.ItemCallback<ProgressEntryEntity>() {
-            override fun areItemsTheSame(oldItem: ProgressEntryEntity, newItem: ProgressEntryEntity) = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: ProgressEntryEntity, newItem: ProgressEntryEntity) = oldItem == newItem
-        }
-        inner class VH(val item: com.food24.track.databinding.ItemProgressBinding) :
-            RecyclerView.ViewHolder(item.root)
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-            val inf = LayoutInflater.from(parent.context)
-            val b = com.food24.track.databinding.ItemProgressBinding.inflate(inf, parent, false)
-            return VH(b)
-        }
-        override fun onBindViewHolder(holder: VH, position: Int) {
-            val e = getItem(position)
-            holder.item.textDate.text = e.date
-            holder.item.textWeight.text = "${e.weight} kg"
-            holder.item.textCalories.text = "${e.caloriesConsumed} kcal"
-        }
-    }
+    override fun onDestroyView() { super.onDestroyView(); _b = null }
 }
