@@ -22,8 +22,8 @@ interface MealEntryDao {
     @Query("DELETE FROM meal_entries WHERE date = :date")
     suspend fun deleteByDate(date: String)
 
-    @Query("UPDATE meal_entries SET eaten = :eaten WHERE date = :date AND mealId = :mealId")
-    suspend fun setEaten(date: String, mealId: Int, eaten: Boolean)
+    @Query("UPDATE meal_entries SET eaten = :eaten WHERE mealId = :entryId")
+    suspend fun setEaten(entryId: Int, eaten: Boolean)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntries(list: List<MealEntryEntity>)
@@ -45,6 +45,12 @@ interface MealEntryDao {
 
     @Query("UPDATE meal_entries SET eaten = :eaten WHERE date = :date AND mealId = :mealId")
     suspend fun updateEaten(date: String, mealId: Int, eaten: Boolean)
+
+    @Query("UPDATE meal_entries SET eaten = :eaten WHERE date = :date AND mealId = :mealId")
+    suspend fun setEaten(date: String, mealId: Int, eaten: Boolean)
+
+    @Query("UPDATE meal_entries SET eaten = :eaten WHERE mealId = :entryId")
+    suspend fun setEatenById(entryId: Int, eaten: Boolean)
 
     // data/dao/MealEntryDao.kt
     data class DailyConsumed(

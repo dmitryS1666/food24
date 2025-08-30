@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="12dp"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp"
     app:cardUseCompatPadding="true"
     app:cardBackgroundColor="#111C38">
 
@@ -12,8 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp">
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/placeholder_meal"
+            android:contentDescription="@null"
+            android:layout_marginEnd="12dp" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -25,8 +33,8 @@
                 android:id="@+id/textTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meal title"
-                android:textColor="#FFFFFF"
+                android:text="Meal name"
+                android:textColor="#EAF0FF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -37,7 +45,7 @@
                 android:text="300 kcal"
                 android:textColor="#BFD7FF"
                 android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
         <CheckBox
@@ -45,6 +53,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Eaten"
-            android:textColor="#EAF0FF" />
+            android:textColor="#EAF0FF"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

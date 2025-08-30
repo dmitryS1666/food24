@@ -22,7 +22,7 @@ class DailyMealsFragment : Fragment() {
 
     private val vm: DailyMealsViewModel by viewModels()
     private val adapter = MealsAdapter(
-        onToggleEaten = { meal -> vm.markEaten(currentDate, meal.id) }
+        onToggleEaten = { meal -> vm.markEaten(currentDate, meal.mealId) }
     )
 
     private val currentDate: String
@@ -57,7 +57,7 @@ class DailyMealsFragment : Fragment() {
     ) : ListAdapter<UiMeal, MealsAdapter.VH>(Diff) {
 
         object Diff : DiffUtil.ItemCallback<UiMeal>() {
-            override fun areItemsTheSame(oldItem: UiMeal, newItem: UiMeal) = oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: UiMeal, newItem: UiMeal) = oldItem.mealId == newItem.mealId
             override fun areContentsTheSame(oldItem: UiMeal, newItem: UiMeal) = oldItem == newItem
         }
 

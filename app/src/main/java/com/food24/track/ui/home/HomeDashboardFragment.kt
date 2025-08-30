@@ -40,19 +40,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val adapter = MealCardAdapter { type ->
-        // открываем детали секции за выбранную дату
-        parentFragmentManager.beginTransaction()
-            .replace(
-                R.id.mainFragmentContainer,
-                com.food24.track.ui.day.MealSectionFragment.newInstance(
-                    currentDate.format(dbFormatter),
-                    type.toString()
-                )
-            )
-            .addToBackStack(null)
-            .commit()
-    }
+    private lateinit var adapter: MealCardAdapter
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var currentDate: LocalDate = LocalDate.now()
@@ -64,6 +52,17 @@ class HomeDashboardFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _b = FragmentHomeDashboardBinding.inflate(i, c, false)
+
+        adapter = MealCardAdapter { type ->
+            val dateIso = currentDate.format(dbFormatter)
+            parentFragmentManager.beginTransaction()
+                .replace(
+                    R.id.mainFragmentContainer,
+                    com.food24.track.ui.day.MealSectionFragment.newInstance(dateIso, type)
+                )
+                .addToBackStack(null)
+                .commit()
+        }
 
         b.recyclerMealsGrid.layoutManager = GridLayoutManager(requireContext(), 2)
         b.recyclerMealsGrid.adapter = adapter
@@ -164,7 +163,7 @@ class HomeDashboardFragment : Fragment() {
 
 /* --- простой адаптер карточек --- */
 private class MealCardAdapter(
-    val onClick: (Int) -> Unit
+    val onOpenSection: (String) -> Unit
 ) : RecyclerView.Adapter<MealCardVH>() {
 
     private val items = mutableListOf<MealCardUi>()
@@ -179,12 +178,12 @@ private class MealCardAdapter(
     }
 
     override fun onBindViewHolder(h: MealCardVH, position: Int) {
-        val it = items[position]
+        val card = items[position]
         with(h.b) {
-            textType.text = it.type
-            textKcal.text = "${it.calories}kcal"
+            textType.text = card.type
+            textKcal.text = "${card.calories} kcal"
 
-            val imgRes = when (it.type) {
+            val imgRes = when (card.type) {
                 MealTypes.BREAKFAST    -> R.drawable.meal_breakfast
                 MealTypes.SNACK        -> R.drawable.meal_snack
                 MealTypes.LUNCH        -> R.drawable.meal_lunch
@@ -193,17 +192,15 @@ private class MealCardAdapter(
                 else                   -> R.drawable.placeholder_meal
             }
             img.setImageResource(imgRes)
-            overlayDim.visibility = if (it.eaten) View.GONE else View.VISIBLE
+            overlayDim.visibility = if (card.eaten) View.GONE else View.VISIBLE
 
-            // теперь по клику — переходим в секцию типа it.type
-            root.setOnClickListener { onClick(it.id) }
-            btnView.setOnClickListener { onClick(it.id) }
-//            btnEdit.setOnClickListener { onClick(it.type) }
+            root.setOnClickListener   { onOpenSection(card.type) }
+            btnView.setOnClickListener{ onOpenSection(card.type) }
         }
     }
 
-
     override fun getItemCount() = items.size
 }
+
 
 private class MealCardVH(val b: ItemHomeMealCardBinding) : RecyclerView.ViewHolder(b.root)

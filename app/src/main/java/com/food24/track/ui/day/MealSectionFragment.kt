@@ -27,9 +27,10 @@ class MealSectionFragment : Fragment() {
         MealSectionVMFactory(app.db.mealEntryDao(), app.db.mealDao())
     }
 
-    private val adapter = MealSectionAdapter { id, eaten, after ->
-        vm.toggle(id, eaten)
-        after()
+    private val adapter by lazy {
+        MealSectionAdapter { entryId, eaten ->
+            vm.toggle(entryId, eaten)   // только (Int, Boolean) -> Unit
+        }
     }
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
@@ -39,28 +40,14 @@ class MealSectionFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // ВАЖНО: без LayoutManager список не отрисуется
         b.list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         b.list.adapter = adapter
 
-        val dateIso = requireArguments().getString(ARG_DATE)!!
+        val date = requireArguments().getString(ARG_DATE)!!
         val type = requireArguments().getString(ARG_TYPE)!!
 
-        val isToday = (LocalDate.parse(dateIso) == LocalDate.now())
-
-        b.list.adapter = MealSectionAdapter { mealId, newValue, revert ->
-            if (!isToday) {
-                Toast.makeText(requireContext(), "Можно отмечать только за сегодня", Toast.LENGTH_SHORT).show()
-                revert()
-                return@MealSectionAdapter
-            }
-            vm.toggle(mealId, newValue)
-        }
-
-        val date = requireArguments().getString(ARG_DATE)!!
-
-        val fmt = DateTimeFormatter.ofPattern("EEE, MMM d") // <-- java.time.*
-        b.textHeader.text = "${typeToTitle(type)} • " + java.time.LocalDate.parse(date).format(fmt)
+        val fmt = DateTimeFormatter.ofPattern("EEE, MMM d")
+        b.textHeader.text = "${typeToTitle(type)} • " + LocalDate.parse(date).format(fmt)
 
         vm.bind(date, type)
 

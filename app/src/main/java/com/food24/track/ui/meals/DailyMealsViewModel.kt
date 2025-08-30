@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+// DailyMealsViewModel.kt
 class DailyMealsViewModel(
     private val mealDao: MealDao,
     private val mealEntryDao: MealEntryDao
@@ -20,8 +21,14 @@ class DailyMealsViewModel(
         viewModelScope.launch {
             mealEntryDao.getEntriesByDate(date).collect { entries ->
                 val meals = entries.mapNotNull { entry ->
-                    mealDao.getById(entry.mealId)?.let {
-                        UiMeal(it.id, it.name, it.calories, entry.eaten)
+                    mealDao.getById(entry.mealId)?.let { m ->
+                        UiMeal(
+                            entryId = entry.mealId,     // <-- берем id записи из entries
+                            mealId  = m.id,
+                            name    = m.name,
+                            calories= m.calories,
+                            eaten   = entry.eaten
+                        )
                     }
                 }
                 _uiState.value = DailyMealsUiState(meals)
@@ -40,7 +47,8 @@ class DailyMealsViewModel(
 data class DailyMealsUiState(val meals: List<UiMeal> = emptyList())
 
 data class UiMeal(
-    val id: Int,
+    val entryId: Int,   // ВАЖНО: это id строки из meal_entries
+    val mealId: Int,
     val name: String,
     val calories: Int,
     val eaten: Boolean
